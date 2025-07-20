@@ -40,6 +40,7 @@ async function home(){
         value: async () => {
           const subject = await createNewSubject(userId)
           if(subject) await saveSubject(subject)
+          await home()
         }
       },
       {
