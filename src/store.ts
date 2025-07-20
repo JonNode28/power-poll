@@ -3,10 +3,11 @@ import ora from "ora";
 import fs from "fs/promises";
 import subjectTypes from "./subject-types/index.js";
 import {Subject} from "./Subject.js";
+import {User} from "./User.js";
 
 let data: Data
 
-export async function get() {
+async function get() {
   if (data) return data
   const spinner = ora('Loading data...')
   spinner.start()
@@ -18,7 +19,7 @@ export async function get() {
   }
   spinner.info('First run. Initialising data')
   const percentDefinition = subjectTypes['percent']
-  data = Data.parse({
+  data = {
     subjects: [{
       id: 'base-pass-threshold',
       name: 'Base Pass Threshold',
@@ -27,18 +28,34 @@ export async function get() {
       author: 'system',
       ...percentDefinition.generator(),
       inputs: []
-    }]
-  })
+    }],
+    users: {}
+  }
   return data
+}
+
+async function set(newData: Data) {
+  await fs.writeFile('./src/data.json', JSON.stringify(newData, null, 2))
+  data = newData
+}
+
+export async function getUsers(){
+  return (await get()).users
+}
+
+export async function setUser(user: User){
+  const data = await get()
+  await set({
+    ...data,
+    users: {
+      ...data.users,
+      [user.id]: user
+    }
+  })
 }
 
 export async function getSubjects() {
   return (await get()).subjects
-}
-
-export async function set(newData: Data) {
-  await fs.writeFile('./src/data.json', JSON.stringify(newData, null, 2))
-  data = newData
 }
 
 export async function saveSubject(subject: Subject) {

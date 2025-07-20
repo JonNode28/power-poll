@@ -30,13 +30,18 @@
       "description": "",
       "type": "number",
       "author": "jon",
-      "votes": {},
       "inputs": [
         {
           "id": "min",
           "subjectId": "minimum-seats"
         }
-      ]
+      ],
+      "votes": {}
     }
-  ]
+  ],
+  "users": {
+    "jon": {
+      "id": "jon"
+    }
+  }
 }

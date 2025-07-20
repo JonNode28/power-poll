@@ -1,21 +1,31 @@
 import { input } from '@inquirer/prompts';
 import { select, Separator } from '@inquirer/prompts';
-import fs from 'fs/promises'
-import ora from 'ora';
-import {Data} from "./Data.js";
 import {createNewSubject} from "./createNewSubject.js";
 import {Subject} from "./Subject.js";
 import subjectTypes from "./subject-types/index.js";
-import {getSubjects, saveSubject} from "./store.js";
+import {getSubjects, getUsers, saveSubject, setUser} from "./store.js";
 
 console.log('Welcome to ✨Power Poll ✨')
 
-const userId = await input({ message: 'ID yourself! ⚔️' });
 console.clear()
-console.log(`Welcome ${userId}`)
 
+const userId = await auth()
 
 await home()
+
+async function auth(){
+  const userId = await input({ message: 'ID yourself! ⚔️' });
+  const users = await getUsers()
+  const existingUser = users[userId]
+  if(existingUser) console.log(`Welcome back ${userId}`)
+  else{
+    await setUser({
+      id: userId
+    })
+    console.log(`Welcome ${userId}!`)
+  }
+  return userId
+}
 
 async function home(){
   let action = await select({
