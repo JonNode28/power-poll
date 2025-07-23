@@ -26,8 +26,9 @@ async function get() {
       description: 'The percentage aye votes required for a pass',
       type: 'percent',
       author: 'system',
-      ...percentDefinition.generator(),
-      inputs: []
+      ...percentDefinition.generate(),
+      inputs: {},
+      status: 'pending'
     }],
     users: {}
   }
@@ -35,7 +36,7 @@ async function get() {
 }
 
 async function set(newData: Data) {
-  await fs.writeFile('./src/data.json', JSON.stringify(newData, null, 2))
+  await fs.writeFile('./src/data.json', JSON.stringify(Data.parse(newData), null, 2))
   data = newData
 }
 

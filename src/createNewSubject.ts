@@ -64,8 +64,9 @@ export const createNewSubject = async (userId: string, type?: string): Promise<S
     type: selectedType.type,
     author: userId,
     votes: {},
-    inputs: [],
-    ...selectedType.subjectType.generator ? selectedType.subjectType.generator() : {}
+    inputs: {},
+    status: 'pending',
+    ...selectedType.subjectType.generate ? selectedType.subjectType.generate() : {}
   }
 
   if (!selectedType.subjectType.inputs?.length) return await saveSubject(newSubject)
@@ -100,7 +101,10 @@ export const createNewSubject = async (userId: string, type?: string): Promise<S
         ...compatibleInputs.map(subject => ({
           name: subject.name,
           description: subject.description,
-          value: () => newSubject.inputs?.push({id: inputDefinition.id, subjectId: subject.id}),
+          value: () =>{
+            if(!newSubject.inputs) newSubject.inputs = {}
+            newSubject.inputs[inputDefinition.id] = subject.id
+          },
         })),
         new Separator(),
         ...inputDefinition.optional

@@ -4,6 +4,7 @@ import {createNewSubject} from "./createNewSubject.js";
 import {Subject} from "./Subject.js";
 import subjectTypes from "./subject-types/index.js";
 import {getSubjects, getUsers, saveSubject, setUser} from "./store.js";
+import {getUpdatedSubjects} from "./getUpdatedSubjects.js";
 
 console.log('Welcome to ✨Power Poll ✨')
 
@@ -40,6 +41,14 @@ async function home(){
         value: async () => {
           const subject = await createNewSubject(userId)
           if(subject) await saveSubject(subject)
+          await home()
+        }
+      },
+      {
+        name: 'Update Values',
+        value: async () => {
+          const updatedSubjects = await getUpdatedSubjects()
+          console.table(updatedSubjects)
           await home()
         }
       },
@@ -121,7 +130,7 @@ async function vote(subject: Subject, userId: string){
   console.log(subject.description)
   const subjectType = subjectTypes[subject.type]
   if(!subjectType) throw new Error(`Couldn't find a "${subject.type}" definition`)
-  const updatedSubject = await subjectType.voter({
+  const updatedSubject = await subjectType.vote({
     subject,
     userId
   })

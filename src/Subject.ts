@@ -6,10 +6,8 @@ export const Subject = z.looseObject({
   description: z.string(),
   type: z.string(),
   author: z.string(),
-  inputs: z.array(z.object({
-    id: z.string(),
-    subjectId: z.string()
-  })).optional()
+  inputs: z.record(z.string(), z.string()).optional(),
+  status: z.enum([ 'rejected', 'pending', 'active' ])
 })
 
 export type Subject = z.infer<typeof Subject>

@@ -1,69 +1,52 @@
-import {BaseSubjectType} from "../BaseSubjectType.js";
-import z from 'zod'
 import {SubjectTypeDefinition} from "../SubjectTypeDefinition.js";
-import {input} from "@inquirer/prompts";
-import {Subject} from "../../Subject.js";
-import {getInput} from "../../getInput.js";
+import {vote} from "./vote.js";
+import {NumberSubject} from "./NumberSubject.js";
+import {getUsers} from "../../store.js";
+import {PercentSubject} from "../percent/PercentSubject.js";
+import {getUpdatedInputSubject} from "../../getUpdatedInputSubject.js";
 
-const NumberSubjectSchema = Subject.extend({
-  minInput: z.string().optional(),
-  maxInput: z.string().optional(),
-  value: z.number(),
-  votes: z.record(z.string(), z.looseObject({
-    timestamp: z.iso.datetime(),
-    value: z.number()
-  }))
-})
 
-export const NumberDefinition: SubjectTypeDefinition = {
+
+export const NumberDefinition: SubjectTypeDefinition<typeof NumberSubject> = {
   id: 'number',
   name: 'Number',
   description: 'Establishes consensus around a number',
-  schema: NumberSubjectSchema,
+  schema: NumberSubject,
   inputs: [
-    { id: 'max', type: 'number', optional: true },
     { id: 'min', type: 'number', optional: true },
-    { id: 'participation', type: 'percent' }
+    { id: 'max', type: 'number', optional: true },
+    { id: 'engagement', type: 'percent' }
   ],
-  generator: () => ({
-
+  generate: () => ({
+    value: 0,
+    votes: {}
   }),
-  voter: async ({ subject, userId}) => {
-    const numberSubject = NumberSubjectSchema.parse(subject)
+  vote,
+  update: async (subject, updatedSubjects) => {
+    const minValue = (await getUpdatedInputSubject(subject.inputs?.min, NumberSubject, updatedSubjects))?.value
+    const maxValue = (await getUpdatedInputSubject(subject.inputs?.max, NumberSubject, updatedSubjects))?.value
+    const engagementThreshold = (await getUpdatedInputSubject(subject.inputs?.engagement, PercentSubject, updatedSubjects))?.value
 
-    const minInput = await getInput(numberSubject.minInput, NumberSubjectSchema)
-    const maxInput = await getInput(numberSubject.maxInput, NumberSubjectSchema)
+    const allVotes = Object.values(subject.votes)
+    const newTotal = allVotes.reduce((runningTotal, vote) => {
+      if(withinRange(vote.value, minValue, maxValue)) runningTotal += vote.value
+      return runningTotal
+    },0)
 
-    const voteValue = Number(await input({
-        message: 'What value would you like to vote for?',
-        validate: (value: string) => {
-          const number= Number(value)
-          if(isNaN(number)) return `"${value}" isn't a valid number`
-          if(typeof minInput !== 'undefined' && number < minInput.value) return `${value} is too low. Must be ${minInput} or higher`
-          if(typeof maxInput !== 'undefined' && number > maxInput.value) return `${value} is too high. Must be ${maxInput} or lower`
-          return true
-        }
-      },
-    ))
+    const newAverageValue = newTotal ? Math.round(newTotal / allVotes.length) : 0
 
-    const allVotes = Object.values(numberSubject.votes)
-    const newTotal = allVotes.reduce((runningTotal, vote) =>
-      runningTotal + vote.value,
-      voteValue)
+    const totalUserCount = Object.keys(await getUsers()).length
+    const actualEngagementRate = allVotes.length / totalUserCount
 
-    const newAverageValue = Math.floor(newTotal / allVotes.length)
+    return {
+      ...subject,
+      value: newAverageValue,
+      status: engagementThreshold && (actualEngagementRate * 100) > engagementThreshold ? 'active' : 'pending'
+    }
+  }
+}
 
-    return ({
-      ...numberSubject,
-      votes: {
-        ...numberSubject.votes,
-        [userId]: {
-          timestamp: new Date().toISOString(),
-          value: voteValue
-        }
-      },
-      value: newAverageValue
-    })
-  },
-
+function withinRange(value: number, min: number | undefined, max: number | undefined){
+  return (typeof min === 'undefined' || value >= min) &&
+    (typeof max === 'undefined' || value >= max)
 }

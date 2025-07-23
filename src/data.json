@@ -6,28 +6,56 @@
       "description": "The percentage aye votes required for a pass",
       "type": "percent",
       "author": "system",
-      "value": 50,
-      "votes": {},
-      "inputs": []
+      "inputs": {},
+      "status": "active",
+      "value": 75,
+      "votes": {
+        "jon": {
+          "timestamp": "2025-07-23T05:40:34.608Z",
+          "value": 50
+        },
+        "tim": {
+          "timestamp": "2025-07-23T05:59:16.719Z",
+          "value": 100
+        }
+      }
     },
     {
-      "id": "minimum-seats",
-      "name": "Minimum Seats",
-      "description": "The minimum number of seats we support",
+      "id": "seats",
+      "name": "Seats",
+      "description": "",
       "type": "number",
       "author": "jon",
-      "votes": {},
-      "inputs": [
-        {
-          "id": "participation",
-          "subjectId": "base-pass-threshold"
+      "inputs": {
+        "engagement": "base-pass-threshold"
+      },
+      "status": "pending",
+      "value": 2,
+      "votes": {
+        "jon": {
+          "timestamp": "2025-07-23T05:40:49.878Z",
+          "value": 2
+        },
+        "ben": {
+          "timestamp": "2025-07-23T05:56:01.010Z",
+          "value": 3
+        },
+        "tim": {
+          "timestamp": "2025-07-23T06:01:13.932Z",
+          "value": 3
         }
-      ]
+      }
     }
   ],
   "users": {
     "jon": {
       "id": "jon"
+    },
+    "ben": {
+      "id": "ben"
+    },
+    "tim": {
+      "id": "tim"
     }
   }
 }
