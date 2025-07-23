@@ -2,10 +2,10 @@ import {input} from "@inquirer/prompts";
 import {PercentSubject} from "./PercentSubject.js";
 import {VoteFn} from "../SubjectTypeDefinition.js";
 
-export const vote: VoteFn = async ({ subject, userId }) => {
+export const vote: VoteFn<typeof PercentSubject> = async ({ subject, userId }) => {
   const percentSubject = PercentSubject.parse(subject)
   const voteValue = Number(await input({
-      message: 'What percent would you like to vote for?',
+    message: `Please enter your percent vote for ${subject.name}`,
       validate: (value: string) => {
         const number = Number(value)
         if (isNaN(number)) return `"${value}" isn't a valid number`
@@ -16,27 +16,16 @@ export const vote: VoteFn = async ({ subject, userId }) => {
     },
   ))
 
-  const newVotes = {
-    ...percentSubject.votes,
-    [userId]: {
-      timestamp: new Date().toISOString(),
-      value: voteValue
-    }
-  }
-
-  const allVotes = Object.values(newVotes)
-
-  const newTotal = allVotes.reduce((runningTotal, vote) =>
-      runningTotal + vote.value,
-    0)
-
-  const newAverageValue = Math.round(newTotal / allVotes.length)
-
-  console.log(`Your vote has been counted. The new overall value for this subject is now ${newAverageValue}`)
+  console.log(`Your vote has been counted.`)
 
   return ({
     ...percentSubject,
-    votes: newVotes,
-    value: newAverageValue
+    votes: {
+      ...percentSubject.votes,
+      [userId]: {
+        timestamp: new Date().toISOString(),
+        value: voteValue
+      }
+    }
   })
 }

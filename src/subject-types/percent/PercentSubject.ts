@@ -8,3 +8,5 @@ export const PercentSubject = Subject.extend({
     value: z.number()
   }))
 })
+
+export type PercentSubject = z.infer<typeof PercentSubject>

@@ -20,16 +20,28 @@ async function get() {
   spinner.info('First run. Initialising data')
   const percentDefinition = subjectTypes['percent']
   data = {
-    subjects: [{
-      id: 'base-pass-threshold',
-      name: 'Base Pass Threshold',
-      description: 'The percentage aye votes required for a pass',
-      type: 'percent',
-      author: 'system',
-      ...percentDefinition.generate(),
-      inputs: {},
-      status: 'pending'
-    }],
+    subjects: [
+      {
+        id: 'engagement-threshold',
+        name: 'Engagement Threshold',
+        description: 'How much engagement is required for a vote to become active',
+        type: 'percent',
+        author: 'system',
+        ...percentDefinition.generate(),
+        inputs: {},
+        status: 'pending'
+      },
+      {
+        id: 'consensus-threshold',
+        name: 'Consensus Threshold',
+        description: 'How much consensus is required for a vote to become active',
+        type: 'percent',
+        author: 'system',
+        ...percentDefinition.generate(),
+        inputs: {},
+        status: 'pending'
+      }
+    ],
     users: {}
   }
   return data
@@ -40,11 +52,11 @@ async function set(newData: Data) {
   data = newData
 }
 
-export async function getUsers(){
+export async function getUsers() {
   return (await get()).users
 }
 
-export async function setUser(user: User){
+export async function setUser(user: User) {
   const data = await get()
   await set({
     ...data,

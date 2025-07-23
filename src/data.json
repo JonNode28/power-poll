@@ -1,9 +1,52 @@
 {
   "subjects": [
     {
-      "id": "base-pass-threshold",
-      "name": "Base Pass Threshold",
-      "description": "The percentage aye votes required for a pass",
+      "id": "engagement-threshold",
+      "name": "Engagement Threshold",
+      "description": "How much engagement is required for a vote to become active",
+      "type": "percent",
+      "author": "system",
+      "inputs": {},
+      "status": "active",
+      "value": 50,
+      "votes": {
+        "jon": {
+          "timestamp": "2025-07-23T08:16:07.924Z",
+          "value": 50
+        }
+      }
+    },
+    {
+      "id": "seat-1",
+      "name": "Seat 1",
+      "description": "Who occupies seat 1",
+      "type": "text",
+      "author": "jon",
+      "inputs": {
+        "engagement": "engagement-threshold",
+        "consensus": "consensus-threshold"
+      },
+      "status": "pending",
+      "votes": {
+        "jon": {
+          "timestamp": "2025-07-23T07:45:24.456Z",
+          "value": "jon"
+        },
+        "ben": {
+          "timestamp": "2025-07-23T08:18:25.539Z",
+          "value": "jon"
+        },
+        "tim": {
+          "timestamp": "2025-07-23T08:18:50.513Z",
+          "value": "ben"
+        }
+      },
+      "value": ""
+    },
+    {
+      "id": "consensus-threshold",
+      "name": "Consensus Threshold",
+      "description": "How much consensus is required for a vote to become active",
       "type": "percent",
       "author": "system",
       "inputs": {},
@@ -11,38 +54,12 @@
       "value": 75,
       "votes": {
         "jon": {
-          "timestamp": "2025-07-23T05:40:34.608Z",
+          "timestamp": "2025-07-23T08:16:23.435Z",
           "value": 50
         },
         "tim": {
-          "timestamp": "2025-07-23T05:59:16.719Z",
+          "timestamp": "2025-07-23T08:20:20.968Z",
           "value": 100
-        }
-      }
-    },
-    {
-      "id": "seats",
-      "name": "Seats",
-      "description": "",
-      "type": "number",
-      "author": "jon",
-      "inputs": {
-        "engagement": "base-pass-threshold"
-      },
-      "status": "pending",
-      "value": 2,
-      "votes": {
-        "jon": {
-          "timestamp": "2025-07-23T05:40:49.878Z",
-          "value": 2
-        },
-        "ben": {
-          "timestamp": "2025-07-23T05:56:01.010Z",
-          "value": 3
-        },
-        "tim": {
-          "timestamp": "2025-07-23T06:01:13.932Z",
-          "value": 3
         }
       }
     }

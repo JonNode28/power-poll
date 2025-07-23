@@ -10,3 +10,5 @@ export const NumberSubject = Subject.extend({
     value: z.number()
   }))
 })
+
+export type NumberSubject = z.infer<typeof NumberSubject>
