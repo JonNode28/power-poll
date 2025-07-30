@@ -66,6 +66,7 @@ export const createNewSubject = async (userId: string, type?: string): Promise<S
     votes: {},
     inputs: {},
     status: 'pending',
+    statusReason: [ { status: 'pending', reason: 'Newly created' } ],
     ...selectedType.subjectType.generate ? selectedType.subjectType.generate() : {}
   }
 

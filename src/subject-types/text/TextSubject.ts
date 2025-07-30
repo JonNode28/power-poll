@@ -9,7 +9,7 @@ export const TextSubjectVote = z.looseObject({
 export type TextSubjectVote = z.infer<typeof TextSubjectVote>
 
 export const TextSubject = Subject.extend({
-  value: z.string(),
+  value: z.string().optional(),
   votes: z.record(z.string(), TextSubjectVote)
 })
 

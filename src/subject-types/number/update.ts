@@ -3,7 +3,8 @@ import {NumberSubject} from "./NumberSubject.js";
 import {PercentSubject} from "../percent/PercentSubject.js";
 import {getUsers} from "../../store.js";
 import {UpdateFn} from "../SubjectTypeDefinition.js";
-import {engagementThresholdMet} from "../../engagementThresholdMet.js";
+import {getEngagementThresholdMetStatusAndReason} from "../../getEngagementThresholdMetStatusAndReason.js";
+import {generateStatusWithReason} from "../../generateStatusWithReason.js";
 
 export const update: UpdateFn<typeof NumberSubject> = async (subject, updatedSubjects) => {
   const minValueSubject = (await getUpdatedInputSubject(subject.inputs?.min, NumberSubject, updatedSubjects))
@@ -18,10 +19,15 @@ export const update: UpdateFn<typeof NumberSubject> = async (subject, updatedSub
 
   const newAverageValue = newTotal ? Math.round(newTotal / allVotes.length) : 0
 
+  const { status, reason } = await generateStatusWithReason([
+    () => getEngagementThresholdMetStatusAndReason(allVotes.length, engagementThresholdSubject)
+  ])
+
   return {
     ...subject,
     value: newAverageValue,
-    status: await engagementThresholdMet(allVotes.length, engagementThresholdSubject) ? 'active' : 'pending'
+    status: status,
+    statusReason: reason
   }
 }
 

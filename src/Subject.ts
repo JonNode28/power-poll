@@ -1,4 +1,6 @@
 import {z} from "zod";
+import {CriteriaResult} from "./generateStatusWithReason.js";
+import {SubjectStatus} from "./SubjectStatus.js";
 
 export const Subject = z.looseObject({
   id: z.string(),
@@ -7,7 +9,8 @@ export const Subject = z.looseObject({
   type: z.string(),
   author: z.string(),
   inputs: z.record(z.string(), z.string()).optional(),
-  status: z.enum([ 'rejected', 'pending', 'active' ])
+  status: SubjectStatus,
+  statusReason: CriteriaResult.array()
 })
 
 export type Subject = z.infer<typeof Subject>

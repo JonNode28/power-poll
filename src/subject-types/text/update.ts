@@ -2,7 +2,8 @@ import {getUpdatedInputSubject} from "../../getUpdatedInputSubject.js";
 import {TextSubject, TextSubjectVote} from "./TextSubject.js";
 import {PercentSubject} from "../percent/PercentSubject.js";
 import {UpdateFn} from "../SubjectTypeDefinition.js";
-import {engagementThresholdMet} from "../../engagementThresholdMet.js";
+import {getEngagementThresholdMetStatusAndReason} from "../../getEngagementThresholdMetStatusAndReason.js";
+import {generateStatusWithReason} from "../../generateStatusWithReason.js";
 
 export const update: UpdateFn<typeof TextSubject> = async (subject, updatedSubjects) => {
 
@@ -20,15 +21,25 @@ export const update: UpdateFn<typeof TextSubject> = async (subject, updatedSubje
 
   const sortedCounts = Object.entries(counts)
     .sort(([, countA], [, countB]) => countB - countA)
-  const [ topKey, topKeyCount ] = sortedCounts[0]
+  const topKeyCountItem = sortedCounts[0]
 
-  const topKeyConsensus = (topKeyCount / allVotes.length) * 100
-  const topKeyConsensusThresholdMet = !consensusThresholdSubject || (consensusThresholdSubject.status === 'active' && topKeyConsensus > consensusThresholdSubject.value)
-
+  const { status, reason } = await generateStatusWithReason([
+    () => getEngagementThresholdMetStatusAndReason(allVotes.length, engagementThresholdSubject),
+    () => {
+      if(!sortedCounts.length) return { status: 'pending', reason: 'No votes yet' }
+      const [ topKey, topKeyCount ] = topKeyCountItem
+      const topKeyConsensus = (topKeyCount / allVotes.length) * 100
+      if(!consensusThresholdSubject) return { status: 'active', reason: 'No consensus threshold subject supplied' }
+      if(consensusThresholdSubject.status !== 'active') return { status: 'pending', reason: `Consensus threshold subject has "${consensusThresholdSubject.status}" status` }
+      if(consensusThresholdSubject.value > topKeyConsensus) return { status: 'pending', reason: `Consensus threshold of ${Math.round(consensusThresholdSubject.value)}% not met. Highest is ${Math.round(topKeyConsensus)}% for "${topKey}"`}
+      return { status: 'active', reason: `Consensus threshold of ${Math.round(consensusThresholdSubject.value)}% met by "${topKey}" with consensus of ${Math.round(topKeyConsensus)}%"`}
+    }
+  ])
 
   return {
     ...subject,
-    value: topKey,
-    status: await engagementThresholdMet(allVotes.length, engagementThresholdSubject) && topKeyConsensusThresholdMet ? 'active' : 'pending'
+    value: topKeyCountItem ? topKeyCountItem[0] : undefined,
+    status: status,
+    statusReason: reason
   }
 }

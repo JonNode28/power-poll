@@ -10,6 +10,8 @@ console.log('Welcome to ✨Power Poll ✨')
 
 console.clear()
 
+const TABLE_HEADERS = [ 'name', 'type', 'value', 'status', 'statusReason' ]
+
 const userId = await auth()
 
 await home()
@@ -48,7 +50,10 @@ async function home(){
         name: 'Update Values',
         value: async () => {
           const updatedSubjects = await getUpdatedSubjects()
-          console.table(updatedSubjects)
+          console.table(Object.values(updatedSubjects).map(updatedSubject => ({
+            ...updatedSubject,
+            statusReason: updatedSubject.statusReason.map(statusReason => `${statusReason.status} - ${statusReason.reason}`)
+          })), TABLE_HEADERS)
           await home()
         }
       },

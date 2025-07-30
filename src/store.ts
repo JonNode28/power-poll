@@ -29,7 +29,8 @@ async function get() {
         author: 'system',
         ...percentDefinition.generate(),
         inputs: {},
-        status: 'pending'
+        status: 'pending',
+        statusReason: [{ status: 'pending', reason: 'Newly created' }]
       },
       {
         id: 'consensus-threshold',
@@ -39,7 +40,8 @@ async function get() {
         author: 'system',
         ...percentDefinition.generate(),
         inputs: {},
-        status: 'pending'
+        status: 'pending',
+        statusReason: [{ status: 'pending', reason: 'Newly created' }]
       }
     ],
     users: {}
