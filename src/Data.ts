@@ -1,9 +1,9 @@
 import {z} from "zod";
-import {Subject} from "./Subject.js";
+import {UnknownSubject} from "./Subject.js";
 import {User} from "./User.js";
 
 export const Data = z.object({
-  subjects: Subject.array(),
+  subjects: UnknownSubject.array(),
   users: z.record(z.string(), User)
 })
 

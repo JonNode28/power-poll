@@ -5,15 +5,27 @@ import {update} from "./update.js";
 
 
 
-export const PercentDefinition: SubjectTypeDefinition<typeof PercentSubject> = {
+export const PercentDefinition: SubjectTypeDefinition<PercentSubject> = {
   id: 'percent',
   name: 'Percent',
   description: 'Establishes consensus around a percentage (0-100)',
   schema: PercentSubject,
   inputs: [],
-  generate: () => ({
+  generate: (setup) => ({
+    id: 'unnamed-percent-subject',
+    name: 'Un-named Percent Subject',
+    description: '',
+    author: 'system',
+    inputs: {},
+    status: 'pending',
+    statusReason: [{ status: 'pending', reason: 'Newly created' }],
     value: 50,
-    votes: {}
+    rejected: false,
+    valueArchive: [],
+    votes: {},
+    voteArchive: [],
+    ...setup,
+    type: 'percent'
   }),
   vote,
   update

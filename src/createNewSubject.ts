@@ -57,7 +57,7 @@ export const createNewSubject = async (userId: string, type?: string): Promise<S
     }
   })
 
-  const newSubject: Subject = {
+  const newSubject: Subject = selectedType.subjectType.generate({
     id: selectedId,
     name: selectedName,
     description: selectedDescription,
@@ -67,8 +67,7 @@ export const createNewSubject = async (userId: string, type?: string): Promise<S
     inputs: {},
     status: 'pending',
     statusReason: [ { status: 'pending', reason: 'Newly created' } ],
-    ...selectedType.subjectType.generate ? selectedType.subjectType.generate() : {}
-  }
+  })
 
   if (!selectedType.subjectType.inputs?.length) return await saveSubject(newSubject)
   console.log(`This subject type has ${selectedType.subjectType.inputs.length}:`)

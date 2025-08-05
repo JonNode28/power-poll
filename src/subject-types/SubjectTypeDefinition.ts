@@ -1,4 +1,4 @@
-import {z, ZodObject} from "zod";
+import {z} from "zod";
 import {Subject} from "../Subject.js";
 
 export interface SubjectVoterProps<S> {
@@ -6,8 +6,8 @@ export interface SubjectVoterProps<S> {
   userId: string
 }
 
-export type VoteFn<S> = ({ subject, userId }: SubjectVoterProps<z.infer<S>>) => Promise<z.infer<S>> | z.infer<S>
-export type UpdateFn<S> = (subject: z.infer<S>, updatedSubjects: Record<string, Subject>) => Promise<z.infer<S>> | z.infer<S>
+export type VoteFn<S extends Subject> = ({ subject, userId }: SubjectVoterProps<S>) => Promise<S> | S
+export type UpdateFn<S extends Subject> = (subject: S, updatedSubjects: Record<string, Subject>) => Promise<S> | S
 
 export const InputDefinition = z.object({
   id: z.string(),
@@ -17,13 +17,13 @@ export const InputDefinition = z.object({
 
 export type InputDefinition = z.infer<typeof InputDefinition>
 
-export interface SubjectTypeDefinition<S extends typeof Subject> {
+export interface SubjectTypeDefinition<S extends Subject> {
   id: string
   name: string
   description: string
-  schema: S
+  schema: z.infer<S>
   inputs: InputDefinition[]
-  generate: () => object
+  generate: (setup: Partial<S>) => S
   vote: VoteFn<S>,
   update: UpdateFn<S>
 }

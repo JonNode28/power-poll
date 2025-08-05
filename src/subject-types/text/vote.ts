@@ -1,8 +1,9 @@
 import {input} from "@inquirer/prompts";
 import {VoteFn} from "../SubjectTypeDefinition.js";
 import {TextSubject} from "./TextSubject.js";
+import {addValueVote} from "../addVote.js";
 
-export const vote: VoteFn<typeof TextSubject> = async ({ subject, userId}) => {
+export const vote: VoteFn<TextSubject> = async ({ subject, userId}) => {
 
   const voteValue = await input({
       message: `Please enter your text vote for ${subject.name}`,
@@ -13,14 +14,5 @@ export const vote: VoteFn<typeof TextSubject> = async ({ subject, userId}) => {
     },
   )
 
-  return {
-    ...subject,
-    votes: {
-      ...subject.votes,
-      [userId]: {
-        timestamp: new Date().toISOString(),
-        value: voteValue
-      }
-    },
-  }
+  return addValueVote(subject, voteValue, userId)
 }

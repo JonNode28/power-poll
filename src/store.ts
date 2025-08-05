@@ -4,6 +4,8 @@ import fs from "fs/promises";
 import subjectTypes from "./subject-types/index.js";
 import {Subject} from "./Subject.js";
 import {User} from "./User.js";
+import {PercentSubject} from "./subject-types/percent/PercentSubject.js";
+import z from "zod";
 
 let data: Data
 
@@ -19,31 +21,26 @@ async function get() {
   }
   spinner.info('First run. Initialising data')
   const percentDefinition = subjectTypes['percent']
+  const engagementThreshold = percentDefinition.generate({
+    id: 'engagement-threshold',
+    name: 'Engagement Threshold',
+    description: 'How much engagement is required for a vote to become active',
+    author: 'system',
+    inputs: {},
+    status: 'pending',
+    statusReason: [{ status: 'pending', reason: 'Newly created' }]
+  })
+  const consensusThreshold = percentDefinition.generate({
+    id: 'consensus-threshold',
+    name: 'Consensus Threshold',
+    description: 'How much consensus is required for a vote to become active',
+    author: 'system',
+    inputs: {},
+    status: 'pending',
+    statusReason: [{ status: 'pending', reason: 'Newly created' }]
+  })
   data = {
-    subjects: [
-      {
-        id: 'engagement-threshold',
-        name: 'Engagement Threshold',
-        description: 'How much engagement is required for a vote to become active',
-        type: 'percent',
-        author: 'system',
-        ...percentDefinition.generate(),
-        inputs: {},
-        status: 'pending',
-        statusReason: [{ status: 'pending', reason: 'Newly created' }]
-      },
-      {
-        id: 'consensus-threshold',
-        name: 'Consensus Threshold',
-        description: 'How much consensus is required for a vote to become active',
-        type: 'percent',
-        author: 'system',
-        ...percentDefinition.generate(),
-        inputs: {},
-        status: 'pending',
-        statusReason: [{ status: 'pending', reason: 'Newly created' }]
-      }
-    ],
+    subjects: [ engagementThreshold, consensusThreshold ],
     users: {}
   }
   return data
@@ -73,8 +70,8 @@ export async function getSubjects() {
   return (await get()).subjects
 }
 
-export async function saveSubject(subject: Subject) {
-  const updatedSubjects = data.subjects.filter(existingSubject => existingSubject.id !== subject.id)
+export async function saveSubject<S extends Subject>(subject: S) {
+  const updatedSubjects:Subject[] = data.subjects.filter(existingSubject => existingSubject.id !== subject.id)
   updatedSubjects.push(subject)
   const newData = {
     ...data,

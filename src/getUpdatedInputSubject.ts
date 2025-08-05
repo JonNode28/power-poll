@@ -1,12 +1,13 @@
 import {z} from "zod";
 import {getSubjects, saveSubject} from "./store.js";
 import subjectTypes from "./subject-types/index.js";
-import { Subject } from "./Subject.js";
+import {Subject, SubjectSchema} from "./Subject.js";
+import {ZodType} from "zod";
 
-export const getUpdatedInputSubject = async <T extends typeof Subject>(subjectId: string | undefined, Subject: T, updatedSubjects: Record<string, Subject>): Promise<z.infer<T> | undefined> => {
+export const getUpdatedInputSubject = async <V extends ZodType<any>, S extends SubjectSchema<V>>(subjectId: string | undefined, SubjectSchema: S, updatedSubjects: Record<string, Subject>): Promise<z.infer<S> | undefined> => {
   if(!subjectId) return
   const alreadyUpdatedSubject = updatedSubjects[subjectId]
-  if(alreadyUpdatedSubject) return Subject.parse(alreadyUpdatedSubject)
+  if(alreadyUpdatedSubject) return SubjectSchema.parse(alreadyUpdatedSubject)
   const subject = (await getSubjects())
     .find(eachSubject => eachSubject.id === subjectId)
   if(!subject) return
@@ -14,5 +15,5 @@ export const getUpdatedInputSubject = async <T extends typeof Subject>(subjectId
   const updatedSubject = await subjectTypeDefinition.update(subject, updatedSubjects)
   await saveSubject(updatedSubject)
   updatedSubjects[updatedSubject.id] = updatedSubject
-  return Subject.parse(updatedSubject)
+  return SubjectSchema.parse(updatedSubject)
 }

@@ -1,4 +1,4 @@
-import {Subject} from "../../Subject.js";
+import {createSubjectSchema, Subject} from "../../Subject.js";
 import z from "zod";
 
 export const TextSubjectVote = z.looseObject({
@@ -8,9 +8,6 @@ export const TextSubjectVote = z.looseObject({
 
 export type TextSubjectVote = z.infer<typeof TextSubjectVote>
 
-export const TextSubject = Subject.extend({
-  value: z.string().optional(),
-  votes: z.record(z.string(), TextSubjectVote)
-})
+export const TextSubject = createSubjectSchema(z.string())
 
 export type TextSubject = z.infer<typeof TextSubject>

@@ -8,7 +8,7 @@ import {update} from "./update.js";
 
 
 
-export const TextDefinition: SubjectTypeDefinition<typeof TextSubject> = {
+export const TextDefinition: SubjectTypeDefinition<TextSubject> = {
   id: 'text',
   name: 'Text',
   description: 'Establishes consensus around a piece of text',
@@ -17,9 +17,21 @@ export const TextDefinition: SubjectTypeDefinition<typeof TextSubject> = {
     { id: 'engagement', type: 'percent' },
     { id: 'consensus', type: 'percent' }
   ],
-  generate: () => ({
-    value: '',
-    votes: {}
+  generate: (setup) => ({
+    id: 'unnamed-text-subject',
+    name: 'Un-named Text Subject',
+    description: '',
+    author: 'system',
+    inputs: {},
+    status: 'pending',
+    statusReason: [{ status: 'pending', reason: 'Newly created' }],
+    value: undefined,
+    rejected: false,
+    valueArchive: [],
+    votes: {},
+    voteArchive: [],
+    ...setup,
+    type: 'text'
   }),
   vote,
   update

@@ -1,6 +1,39 @@
 {
   "subjects": [
     {
+      "id": "engagement-threshold",
+      "name": "Engagement Threshold",
+      "description": "How much engagement is required for a vote to become active",
+      "type": "percent",
+      "author": "system",
+      "inputs": {},
+      "status": "pending",
+      "statusReason": [
+        {
+          "status": "pending",
+          "reason": "Newly created"
+        }
+      ],
+      "value": 50,
+      "rejected": false,
+      "valueArchive": [],
+      "votes": {
+        "jon": {
+          "timestamp": "2025-08-05T05:47:17.318Z",
+          "value": 50
+        }
+      },
+      "voteArchive": [
+        {
+          "userId": "jon",
+          "vote": {
+            "timestamp": "2025-08-05T05:47:17.318Z",
+            "value": 50
+          }
+        }
+      ]
+    },
+    {
       "id": "consensus-threshold",
       "name": "Consensus Threshold",
       "description": "How much consensus is required for a vote to become active",
@@ -15,12 +48,23 @@
         }
       ],
       "value": 50,
+      "rejected": false,
+      "valueArchive": [],
       "votes": {
         "jon": {
-          "timestamp": "2025-07-30T04:59:56.595Z",
+          "timestamp": "2025-08-05T05:47:21.442Z",
           "value": 50
         }
-      }
+      },
+      "voteArchive": [
+        {
+          "userId": "jon",
+          "vote": {
+            "timestamp": "2025-08-05T05:47:21.442Z",
+            "value": 50
+          }
+        }
+      ]
     },
     {
       "id": "seat-1",
@@ -39,64 +83,28 @@
           "reason": "Newly created"
         }
       ],
+      "rejected": false,
+      "valueArchive": [],
       "votes": {
         "jon": {
-          "timestamp": "2025-07-30T05:18:58.303Z",
-          "value": "ben"
-        },
-        "kim": {
-          "timestamp": "2025-07-30T05:28:30.220Z",
-          "value": "ben"
-        },
-        "ben": {
-          "timestamp": "2025-07-30T05:26:59.450Z",
-          "value": "kim"
+          "timestamp": "2025-08-05T05:48:09.254Z",
+          "value": "jon"
         }
       },
-      "value": ""
-    },
-    {
-      "id": "engagement-threshold",
-      "name": "Engagement Threshold",
-      "description": "How much engagement is required for a vote to become active",
-      "type": "percent",
-      "author": "system",
-      "inputs": {},
-      "status": "active",
-      "statusReason": [
+      "voteArchive": [
         {
-          "status": "active",
-          "reason": "some votes received (2)"
+          "userId": "jon",
+          "vote": {
+            "timestamp": "2025-08-05T05:48:09.254Z",
+            "value": "jon"
+          }
         }
-      ],
-      "value": 75,
-      "votes": {
-        "jon": {
-          "timestamp": "2025-07-30T04:59:51.223Z",
-          "value": 50
-        },
-        "tam": {
-          "timestamp": "2025-07-30T05:29:56.106Z",
-          "value": 100
-        }
-      }
+      ]
     }
   ],
   "users": {
     "jon": {
       "id": "jon"
-    },
-    "ben": {
-      "id": "ben"
-    },
-    "kim": {
-      "id": "kim"
-    },
-    "tam": {
-      "id": "tam"
-    },
-    "joe": {
-      "id": "joe"
     }
   }
 }

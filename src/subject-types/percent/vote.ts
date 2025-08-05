@@ -1,9 +1,9 @@
 import {input} from "@inquirer/prompts";
 import {PercentSubject} from "./PercentSubject.js";
 import {VoteFn} from "../SubjectTypeDefinition.js";
+import {addValueVote, addVote} from "../addVote.js";
 
-export const vote: VoteFn<typeof PercentSubject> = async ({ subject, userId }) => {
-  const percentSubject = PercentSubject.parse(subject)
+export const vote: VoteFn<PercentSubject> = async ({ subject, userId }) => {
   const voteValue = Number(await input({
     message: `Please enter your percent vote for ${subject.name}`,
       validate: (value: string) => {
@@ -18,14 +18,5 @@ export const vote: VoteFn<typeof PercentSubject> = async ({ subject, userId }) =
 
   console.log(`Your vote has been counted.`)
 
-  return ({
-    ...percentSubject,
-    votes: {
-      ...percentSubject.votes,
-      [userId]: {
-        timestamp: new Date().toISOString(),
-        value: voteValue
-      }
-    }
-  })
+  return addValueVote(subject, voteValue, userId)
 }
