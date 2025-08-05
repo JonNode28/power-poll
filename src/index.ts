@@ -1,7 +1,7 @@
 import { input } from '@inquirer/prompts';
 import { select, Separator } from '@inquirer/prompts';
 import {createNewSubject} from "./createNewSubject.js";
-import {Subject} from "./Subject.js";
+import {RejectedVote, Subject} from "./Subject.js";
 import subjectTypes from "./subject-types/index.js";
 import {getSubjects, getUsers, saveSubject, setUser} from "./store.js";
 import {getUpdatedSubjects} from "./getUpdatedSubjects.js";
@@ -106,6 +106,10 @@ async function detail(subject: Subject){
         name: 'Vote',
         value: async () => vote(subject, userId)
       },
+      {
+        name: 'Reject',
+        value: async () => reject(subject, userId)
+      },
       new Separator(),
       {
         name: 'back',
@@ -141,6 +145,32 @@ async function vote(subject: Subject, userId: string){
   })
 
   await saveSubject(updatedSubject)
+  await home()
+}
+
+async function reject(subject: Subject, userId: string){
+  console.clear()
+  const rejectionVote:RejectedVote = {
+    timestamp: new Date().toISOString(),
+    rejected: true
+  }
+  const updatedSubject:Subject = {
+    ...subject,
+    votes: {
+      ...subject.votes,
+      [userId]: rejectionVote
+    },
+    voteArchive: [
+      ...subject.voteArchive,
+      {
+        userId,
+        vote: rejectionVote
+      }
+    ]
+  }
+
+  await saveSubject(updatedSubject)
+  console.log(`Rejected ${subject.name}`)
   await home()
 }
 

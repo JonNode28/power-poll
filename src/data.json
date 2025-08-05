@@ -83,11 +83,15 @@
           "reason": "Newly created"
         }
       ],
-      "rejected": false,
+      "rejected": true,
       "valueArchive": [],
       "votes": {
         "jon": {
-          "timestamp": "2025-08-05T05:48:09.254Z",
+          "timestamp": "2025-08-05T06:04:35.151Z",
+          "rejected": true
+        },
+        "ben": {
+          "timestamp": "2025-08-05T06:05:01.041Z",
           "value": "jon"
         }
       },
@@ -95,7 +99,14 @@
         {
           "userId": "jon",
           "vote": {
-            "timestamp": "2025-08-05T05:48:09.254Z",
+            "timestamp": "2025-08-05T06:04:35.151Z",
+            "rejected": true
+          }
+        },
+        {
+          "userId": "ben",
+          "vote": {
+            "timestamp": "2025-08-05T06:05:01.041Z",
             "value": "jon"
           }
         }
@@ -105,6 +116,9 @@
   "users": {
     "jon": {
       "id": "jon"
+    },
+    "ben": {
+      "id": "ben"
     }
   }
 }

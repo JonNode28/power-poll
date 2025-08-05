@@ -19,7 +19,7 @@ const RejectedVote = z.object({
 export type RejectedVote = z.infer<typeof RejectedVote>
 
 export const createVoteSchema = <V extends ZodType<any>>(valueSchema: V) => {
-  return z.union([ createValueVoteSchema(valueSchema), RejectedVote ])
+  return z.union([ RejectedVote, createValueVoteSchema(valueSchema) ])
 }
 
 export type Vote<V extends ZodType<any>> = z.infer<ReturnType<typeof createVoteSchema<V>>>

@@ -22,7 +22,7 @@ const rejectionCriteria = <S extends ZodType<any>>(subject: z.infer<ReturnType<t
   const allVotes = Object.values(subject.votes)
   const rejectionCount = allVotes.filter(vote => isRejected(vote)).length
   const rejectionRate = rejectionCount / allVotes.length
-  const rejected = rejectionRate > 0.5
+  const rejected = rejectionRate >= 0.5
   return { status: rejected ? 'rejected' : 'active', reason: `${rejected ? 'More' : 'Less'} than 50% (${rejectionRate * 100}%) of votes were rejections`}
 }
 
@@ -33,7 +33,7 @@ export const generateStatusWithReason = async <S extends ZodType<any>>(
     rejectionCriteria(subject),
     ...criteria.map(criteriaFn => criteriaFn())
   ])
-  if(results.some(result => result.status === 'pending')) return { status: 'pending', reason: results }
   if(results.some(result => result.status === 'rejected')) return { status: 'rejected', reason: results }
+  if(results.some(result => result.status === 'pending')) return { status: 'pending', reason: results }
   return { status: 'active', reason: results }
 }
