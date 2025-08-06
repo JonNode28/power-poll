@@ -5,6 +5,7 @@ import {getUsers} from "../../store.js";
 import {PercentSubject} from "../percent/PercentSubject.js";
 import {getUpdatedInputSubject} from "../../getUpdatedInputSubject.js";
 import {update} from "./update.js";
+import {generateBaseSubject} from "../generateBaseSubject.js";
 
 
 
@@ -18,22 +19,7 @@ export const NumberDefinition: SubjectTypeDefinition<NumberSubject> = {
     { id: 'max', type: 'number', optional: true },
     { id: 'engagement', type: 'percent' }
   ],
-  generate: (setup) => ({
-    id: 'unnamed-number-subject',
-    name: 'Un-named Number Subject',
-    description: '',
-    author: 'system',
-    inputs: {},
-    status: 'pending',
-    statusReason: [{ status: 'pending', reason: 'Newly created' }],
-    value: undefined,
-    rejected: false,
-    valueArchive: [],
-    votes: {},
-    voteArchive: [],
-    ...setup,
-    type: 'number'
-  }),
+  generate: (setup) => generateBaseSubject({ setup }),
   vote,
   update
 }
