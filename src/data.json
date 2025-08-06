@@ -7,19 +7,24 @@
       "type": "percent",
       "author": "system",
       "inputs": {},
-      "status": "pending",
+      "status": "active",
       "statusReason": [
         {
-          "status": "pending",
-          "reason": "Newly created"
+          "status": "active",
+          "reason": "Less than 50% (0%) of votes were rejections"
+        },
+        {
+          "status": "active",
+          "reason": "some votes received (1)"
         }
       ],
       "value": 50,
+      "valueReason": "new total (50) / number of votes ([object Object]) rounded",
       "rejected": false,
       "valueArchive": [],
       "votes": {
         "jon": {
-          "timestamp": "2025-08-05T05:47:17.318Z",
+          "timestamp": "2025-08-06T15:31:41.709Z",
           "value": 50
         }
       },
@@ -27,7 +32,7 @@
         {
           "userId": "jon",
           "vote": {
-            "timestamp": "2025-08-05T05:47:17.318Z",
+            "timestamp": "2025-08-06T15:31:41.709Z",
             "value": 50
           }
         }
@@ -40,19 +45,24 @@
       "type": "percent",
       "author": "system",
       "inputs": {},
-      "status": "pending",
+      "status": "active",
       "statusReason": [
         {
-          "status": "pending",
-          "reason": "Newly created"
+          "status": "active",
+          "reason": "Less than 50% (0%) of votes were rejections"
+        },
+        {
+          "status": "active",
+          "reason": "some votes received (1)"
         }
       ],
       "value": 50,
+      "valueReason": "new total (50) / number of votes ([object Object]) rounded",
       "rejected": false,
       "valueArchive": [],
       "votes": {
         "jon": {
-          "timestamp": "2025-08-05T05:47:21.442Z",
+          "timestamp": "2025-08-06T15:31:44.844Z",
           "value": 50
         }
       },
@@ -60,15 +70,15 @@
         {
           "userId": "jon",
           "vote": {
-            "timestamp": "2025-08-05T05:47:21.442Z",
+            "timestamp": "2025-08-06T15:31:44.844Z",
             "value": 50
           }
         }
       ]
     },
     {
-      "id": "seat-1",
-      "name": "Seat 1",
+      "id": "group-description",
+      "name": "Group Description",
       "description": "",
       "type": "text",
       "author": "jon",
@@ -79,35 +89,149 @@
       "status": "pending",
       "statusReason": [
         {
+          "status": "active",
+          "reason": "Less than 50% (NaN%) of votes were rejections"
+        },
+        {
           "status": "pending",
-          "reason": "Newly created"
+          "reason": "Engagement 0% is below threshold of 50%"
+        },
+        {
+          "status": "pending",
+          "reason": "No votes yet"
         }
       ],
-      "rejected": true,
+      "valueReason": "votes by popularity: ",
+      "rejected": false,
+      "valueArchive": [],
+      "votes": {},
+      "voteArchive": []
+    },
+    {
+      "id": "group-name",
+      "name": "Group Name",
+      "description": "",
+      "type": "text",
+      "author": "jon",
+      "inputs": {
+        "engagement": "engagement-threshold",
+        "consensus": "consensus-threshold"
+      },
+      "status": "pending",
+      "statusReason": [
+        {
+          "status": "active",
+          "reason": "Less than 50% (0%) of votes were rejections"
+        },
+        {
+          "status": "pending",
+          "reason": "Engagement 33% is below threshold of 50%"
+        },
+        {
+          "status": "active",
+          "reason": "Consensus threshold of 50% met by \"jons awesome group\" with consensus of 100%\""
+        }
+      ],
+      "value": "jons awesome group",
+      "valueReason": "votes by popularity: #1 jons awesome group (1)",
+      "rejected": false,
       "valueArchive": [],
       "votes": {
         "jon": {
-          "timestamp": "2025-08-05T06:04:35.151Z",
-          "rejected": true
-        },
-        "ben": {
-          "timestamp": "2025-08-05T06:05:01.041Z",
-          "value": "jon"
+          "timestamp": "2025-08-06T15:32:35.799Z",
+          "value": "Jons Awesome Group"
         }
       },
       "voteArchive": [
         {
           "userId": "jon",
           "vote": {
-            "timestamp": "2025-08-05T06:04:35.151Z",
-            "rejected": true
+            "timestamp": "2025-08-06T15:32:35.799Z",
+            "value": "Jons Awesome Group"
+          }
+        }
+      ]
+    },
+    {
+      "id": "home-page-items",
+      "name": "Home Page Items",
+      "description": "",
+      "type": "list",
+      "author": "jon",
+      "inputs": {
+        "engagement": "engagement-threshold",
+        "consensus": "consensus-threshold"
+      },
+      "status": "active",
+      "statusReason": [
+        {
+          "status": "active",
+          "reason": "Less than 50% (0%) of votes were rejections"
+        },
+        {
+          "status": "active",
+          "reason": "Engagement 100% is above threshold of 50%"
+        }
+      ],
+      "value": [
+        "group-name",
+        "group-description"
+      ],
+      "valueReason": "2 choices have reached consensus: #1 group-name (consensus: 67%, score: 0), #2 group-description (consensus: 67%, score: 1). 2 choices didn't make it #1 consensus-threshold (consensus: 33%, score: 1), #2 engagement-threshold (consensus: 33%, score: 2)",
+      "rejected": false,
+      "valueArchive": [],
+      "votes": {
+        "jon": {
+          "timestamp": "2025-08-06T15:33:45.567Z",
+          "value": [
+            "group-name",
+            "group-description"
+          ]
+        },
+        "joe": {
+          "timestamp": "2025-08-06T15:34:17.280Z",
+          "value": [
+            "group-name"
+          ]
+        },
+        "jen": {
+          "timestamp": "2025-08-06T15:46:38.086Z",
+          "value": [
+            "group-description",
+            "consensus-threshold",
+            "engagement-threshold"
+          ]
+        }
+      },
+      "voteArchive": [
+        {
+          "userId": "jon",
+          "vote": {
+            "timestamp": "2025-08-06T15:33:45.567Z",
+            "value": [
+              "group-name",
+              "group-description"
+            ]
           }
         },
         {
-          "userId": "ben",
+          "userId": "joe",
           "vote": {
-            "timestamp": "2025-08-05T06:05:01.041Z",
-            "value": "jon"
+            "timestamp": "2025-08-06T15:34:17.280Z",
+            "value": [
+              "group-name"
+            ]
+          }
+        },
+        {
+          "userId": "jen",
+          "vote": {
+            "timestamp": "2025-08-06T15:46:38.086Z",
+            "value": [
+              "group-description",
+              "consensus-threshold",
+              "engagement-threshold"
+            ]
           }
         }
       ]
@@ -117,8 +241,11 @@
     "jon": {
       "id": "jon"
     },
-    "ben": {
-      "id": "ben"
+    "joe": {
+      "id": "joe"
+    },
+    "jen": {
+      "id": "jen"
     }
   }
 }

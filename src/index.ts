@@ -50,10 +50,13 @@ async function home(){
         name: 'Update Values',
         value: async () => {
           const updatedSubjects = await getUpdatedSubjects()
-          console.table(Object.values(updatedSubjects).map(updatedSubject => ({
+          console.table(updatedSubjects.map(updatedSubject => ({
             ...updatedSubject,
             statusReason: updatedSubject.statusReason.map(statusReason => `${statusReason.status} - ${statusReason.reason}`)
           })), TABLE_HEADERS)
+          for(const updatedSubject of updatedSubjects){
+            await saveSubject(updatedSubject)
+          }
           await home()
         }
       },

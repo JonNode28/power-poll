@@ -9,5 +9,5 @@ export const getUpdatedSubjects = async () => {
     const subjectType = subjectTypes[subject.type]
     updatedSubjects[subject.id] = await subjectType.update(subject, updatedSubjects)
   }
-  return updatedSubjects
+  return Object.values(updatedSubjects)
 }

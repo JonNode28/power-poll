@@ -22,6 +22,7 @@ export const update: UpdateFn<PercentSubject> = async (subject) => {
   return {
     ...subject,
     value: newAverageValue,
+    valueReason: `new total (${newTotal}) / number of votes (${allVotes}) rounded`,
     status: status,
     statusReason: reason
   }

@@ -27,10 +27,10 @@ export const update: UpdateFn<TextSubject> = async (subject, updatedSubjects) =>
   const { status, reason } = await generateStatusWithReason(subject, [
     () => getEngagementThresholdMetStatusAndReason(allVotes.length, engagementThresholdSubject),
     () => {
+      if(!consensusThresholdSubject) return { status: 'active', reason: 'No consensus threshold subject supplied' }
       if(!sortedCounts.length) return { status: 'pending', reason: 'No votes yet' }
       const [ topKey, topKeyCount ] = topKeyCountItem
       const topKeyConsensus = (topKeyCount / allVotes.length) * 100
-      if(!consensusThresholdSubject) return { status: 'active', reason: 'No consensus threshold subject supplied' }
       if(consensusThresholdSubject.status !== 'active') return { status: 'pending', reason: `Consensus threshold subject has "${consensusThresholdSubject.status}" status` }
       if(consensusThresholdSubject.value === undefined) return { status: 'pending', reason: `Consensus threshold subject no value` }
       if(consensusThresholdSubject.value > topKeyConsensus) return { status: 'pending', reason: `Consensus threshold of ${Math.round(consensusThresholdSubject.value)}% not met. Highest is ${Math.round(topKeyConsensus)}% for "${topKey}"`}
@@ -41,6 +41,7 @@ export const update: UpdateFn<TextSubject> = async (subject, updatedSubjects) =>
   return {
     ...subject,
     value: topKeyCountItem ? topKeyCountItem[0] : undefined,
+    valueReason: `votes by popularity: ${sortedCounts.map(([ value, count ], i) => `#${i + 1} ${value} (${count})`).join(',')}`,
     status: status,
     statusReason: reason
   }

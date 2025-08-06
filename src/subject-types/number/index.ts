@@ -19,7 +19,7 @@ export const NumberDefinition: SubjectTypeDefinition<NumberSubject> = {
     { id: 'max', type: 'number', optional: true },
     { id: 'engagement', type: 'percent' }
   ],
-  generate: (setup) => generateBaseSubject({ setup }),
+  generate: (setup) => generateBaseSubject({ type: 'number', setup }),
   vote,
   update
 }
