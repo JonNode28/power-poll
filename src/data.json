@@ -97,7 +97,7 @@
       "statusReason": [
         {
           "status": "active",
-          "reason": "Less than 50% (NaN%) of votes were rejections"
+          "reason": "Less than 50% (0%) of votes were rejections"
         },
         {
           "status": "pending",

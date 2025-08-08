@@ -21,7 +21,7 @@ interface StatusWithReasonResult {
 const rejectionCriteria = (subject: UnknownSubject):CriteriaResult => {
   const allVotes = Object.values(subject.votes)
   const rejectionCount = allVotes.filter(vote => isRejected(vote)).length
-  const rejectionRate = rejectionCount / allVotes.length
+  const rejectionRate = rejectionCount === 0 ? 0 : rejectionCount / allVotes.length
   const rejected = rejectionRate >= 0.5
   return { status: rejected ? 'rejected' : 'active', reason: `${rejected ? 'More' : 'Less'} than 50% (${rejectionRate * 100}%) of votes were rejections`}
 }
