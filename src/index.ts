@@ -1,10 +1,11 @@
 import { input } from '@inquirer/prompts';
 import { select, Separator } from '@inquirer/prompts';
 import {createNewSubject} from "./createNewSubject.js";
-import {RejectedVote, Subject} from "./Subject.js";
-import subjectTypes from "./subject-types/index.js";
+import {RejectedVote, Subject, UnknownSubject} from "./Subject.js";
+import subjectTypes, {getSubjectType} from "./subject-types/index.js";
 import {getSubjects, getUsers, saveSubject, setUser} from "./store.js";
 import {getUpdatedSubjects} from "./getUpdatedSubjects.js";
+import {ZodType} from "zod";
 
 console.log('Welcome to ✨Power Poll ✨')
 
@@ -71,7 +72,7 @@ async function home(){
 
 async function list(){
   console.clear()
-  let subject: Subject | undefined = await select({
+  let subject: Subject<ZodType, ZodType> | undefined = await select({
     message: 'Select a subject',
     choices: [
       ...(await getSubjects()).map(subject => ({
@@ -87,13 +88,15 @@ async function list(){
   });
 
   if(!subject){
-    subject = await create();
+    await detail(await create())
+  } else {
+    await detail(subject)
   }
 
-  await detail(subject)
+
 }
 
-async function detail(subject: Subject){
+async function detail(subject: UnknownSubject){
   console.clear()
   console.log(`Subject: ${subject.name}`)
   console.log(`Type: ${subject.type}`)
@@ -136,11 +139,11 @@ async function create(){
   return subject
 }
 
-async function vote(subject: Subject, userId: string){
+async function vote(subject: UnknownSubject, userId: string){
   console.clear()
   console.log(`Vote on ${subject.name}`)
   console.log(subject.description)
-  const subjectType = subjectTypes[subject.type]
+  const subjectType = getSubjectType(subject.type)
   if(!subjectType) throw new Error(`Couldn't find a "${subject.type}" definition`)
   const updatedSubject = await subjectType.vote({
     subject,
@@ -151,13 +154,13 @@ async function vote(subject: Subject, userId: string){
   await home()
 }
 
-async function reject(subject: Subject, userId: string){
+async function reject(subject: UnknownSubject, userId: string){
   console.clear()
   const rejectionVote:RejectedVote = {
     timestamp: new Date().toISOString(),
     rejected: true
   }
-  const updatedSubject:Subject = {
+  const updatedSubject:UnknownSubject = {
     ...subject,
     votes: {
       ...subject.votes,

@@ -1,6 +1,6 @@
 import {SubjectTypeDefinition} from "../SubjectTypeDefinition.js";
 import {vote} from "./vote.js";
-import {ListSubject} from "./ListSubject.js";
+import {ListSubject, ListSubjectValue, ListSubjectValueReason} from "./ListSubject.js";
 import {getUsers} from "../../store.js";
 import {PercentSubject} from "../percent/PercentSubject.js";
 import {getUpdatedInputSubject} from "../../getUpdatedInputSubject.js";
@@ -9,7 +9,7 @@ import {generateBaseSubject} from "../generateBaseSubject.js";
 
 
 
-export const ListDefinition: SubjectTypeDefinition<ListSubject> = {
+export const ListDefinition: SubjectTypeDefinition<ListSubject, typeof ListSubjectValue, typeof ListSubjectValueReason> = {
   id: 'list',
   name: 'List',
   description: 'Establishes consensus around a list of subjects',

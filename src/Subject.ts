@@ -2,14 +2,14 @@ import {z, ZodType} from "zod";
 import {CriteriaResult} from "./generateStatusWithReason.js";
 import {SubjectStatus} from "./SubjectStatus.js";
 
-export const createValueVoteSchema = <V extends ZodType<any>>(valueSchema: V) => {
+export const createValueVoteSchema = <V extends ZodType>(valueSchema: V) => {
  return z.object({
     timestamp: z.iso.datetime(),
     value: valueSchema
   })
 }
 
-export type ValueVote<V extends ZodType<any>> = z.infer<ReturnType<typeof createValueVoteSchema<V>>>
+export type ValueVote<V extends ZodType> = z.infer<ReturnType<typeof createValueVoteSchema<V>>>
 
 const RejectedVote = z.object({
   timestamp: z.iso.datetime(),
@@ -18,13 +18,13 @@ const RejectedVote = z.object({
 
 export type RejectedVote = z.infer<typeof RejectedVote>
 
-export const createVoteSchema = <V extends ZodType<any>>(valueSchema: V) => {
+export const createVoteSchema = <V extends ZodType>(valueSchema: V) => {
   return z.union([ RejectedVote, createValueVoteSchema(valueSchema) ])
 }
 
-export type Vote<V extends ZodType<any>> = z.infer<ReturnType<typeof createVoteSchema<V>>>
+export type Vote<V extends ZodType> = z.infer<ReturnType<typeof createVoteSchema<V>>>
 
-export const createSubjectSchema = <V extends ZodType<any>>(valueSchema: V) => {
+export const createSubjectSchema = <V extends ZodType, VR extends ZodType>(valueSchema: V, valueReasonSchema: VR) => {
   return z.object({
     id: z.string(),
     name: z.string(),
@@ -36,6 +36,7 @@ export const createSubjectSchema = <V extends ZodType<any>>(valueSchema: V) => {
     statusReason: CriteriaResult.array(),
     valueUpdatedTimestamp: z.iso.datetime().optional(),
     value: valueSchema.optional(),
+    valueReason: valueReasonSchema,
     rejected: z.boolean(),
     valueArchive: z.array(
       z.object({
@@ -52,12 +53,13 @@ export const createSubjectSchema = <V extends ZodType<any>>(valueSchema: V) => {
   })
 }
 
-export const UnknownSubject = createSubjectSchema(z.unknown())
+export const UnknownSubject = createSubjectSchema(z.any(), z.any())
+export type UnknownSubject = z.infer<typeof UnknownSubject>
 
-export type SubjectSchema<V extends ZodType<any>> = ReturnType<typeof createSubjectSchema<V>>
+export type SubjectSchema<V extends ZodType, VR extends ZodType> = ReturnType<typeof createSubjectSchema<V, VR>>
 
-export type Subject<V extends ZodType<any> = ZodType<unknown>> = z.infer<SubjectSchema<V>>
+export type Subject<V extends ZodType, VR extends ZodType> = z.infer<SubjectSchema<V, VR>>
 
-export function isRejected<V extends ZodType<any>>(vote: ValueVote<V> | RejectedVote): vote is RejectedVote {
+export function isRejected<V extends ZodType>(vote: ValueVote<V> | RejectedVote): vote is RejectedVote {
   return 'rejected' in vote;
 }

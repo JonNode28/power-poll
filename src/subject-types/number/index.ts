@@ -1,15 +1,13 @@
 import {SubjectTypeDefinition} from "../SubjectTypeDefinition.js";
 import {vote} from "./vote.js";
 import {NumberSubject} from "./NumberSubject.js";
-import {getUsers} from "../../store.js";
-import {PercentSubject} from "../percent/PercentSubject.js";
-import {getUpdatedInputSubject} from "../../getUpdatedInputSubject.js";
 import {update} from "./update.js";
 import {generateBaseSubject} from "../generateBaseSubject.js";
+import {ZodType} from "zod";
 
 
 
-export const NumberDefinition: SubjectTypeDefinition<NumberSubject> = {
+export const NumberDefinition: SubjectTypeDefinition<NumberSubject, ZodType<number>, ZodType<string>> = {
   id: 'number',
   name: 'Number',
   description: 'Establishes consensus around a number',

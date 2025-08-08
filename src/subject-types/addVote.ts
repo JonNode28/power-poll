@@ -1,11 +1,11 @@
 import {createSubjectSchema, RejectedVote, Subject, ValueVote, Vote} from "../Subject.js";
 import z, {ZodType} from "zod";
 
-export const addVote = <V extends ZodType<any>>(
-  subject: z.infer<ReturnType<typeof createSubjectSchema<V>>>,
+export const addVote = <S extends Subject<V, VR>, V extends ZodType, VR extends ZodType>(
+  subject: S,
   vote: Vote<V>,
   userId: string
-): z.infer<ReturnType<typeof createSubjectSchema<V>>> => {
+): S => {
   return ({
     ...subject,
     votes: {
@@ -22,26 +22,26 @@ export const addVote = <V extends ZodType<any>>(
   })
 }
 
-export const addValueVote = <V extends ZodType<any>>(
-  subject: Subject<V>,
+export const addValueVote = <S extends Subject<V, VR>, V extends ZodType, VR extends ZodType>(
+  subject: S,
   value: z.infer<V>,
   userId: string
-): Subject<V> => {
+): S => {
   const vote = {
     timestamp: new Date().toISOString(),
     value
   }
-  return addVote(subject, vote, userId)
+  return addVote<S, V, VR>(subject, vote, userId)
 }
 
-export const addRejectionVote = <V extends ZodType<any>>(
-  subject: z.infer<ReturnType<typeof createSubjectSchema<V>>>,
+export const addRejectionVote = <S extends Subject<V, VR>, V extends ZodType, VR extends ZodType>(
+  subject: S,
   userId: string
-): z.infer<ReturnType<typeof createSubjectSchema<V>>> => {
+): S => {
   const vote: RejectedVote = {
     timestamp: new Date().toISOString(),
     rejected: true
   }
-  return addVote(subject, vote, userId)
+  return addVote<S, V, VR>(subject, vote, userId)
 }
 

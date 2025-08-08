@@ -6,8 +6,9 @@ import {UpdateFn} from "../SubjectTypeDefinition.js";
 import {getEngagementThresholdMetStatusAndReason} from "../../getEngagementThresholdMetStatusAndReason.js";
 import {generateStatusWithReason} from "../../generateStatusWithReason.js";
 import {isRejected} from "../../Subject.js";
+import {ZodType} from "zod";
 
-export const update: UpdateFn<NumberSubject> = async (subject, updatedSubjects) => {
+export const update: UpdateFn<NumberSubject, ZodType<number>, ZodType<string>> = async (subject, updatedSubjects) => {
   const minValueSubject = (await getUpdatedInputSubject(subject.inputs?.min, NumberSubject, updatedSubjects))
   const maxValueSubject = (await getUpdatedInputSubject(subject.inputs?.max, NumberSubject, updatedSubjects))
   const engagementThresholdSubject = (await getUpdatedInputSubject(subject.inputs?.engagement, PercentSubject, updatedSubjects))

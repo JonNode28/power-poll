@@ -1,5 +1,5 @@
 import {getUpdatedInputSubject} from "../../getUpdatedInputSubject.js";
-import {ListSubject} from "./ListSubject.js";
+import {ListSubject, ListSubjectValue, ListSubjectValueReason} from "./ListSubject.js";
 import {PercentSubject} from "../percent/PercentSubject.js";
 import {getUsers} from "../../store.js";
 import {UpdateFn} from "../SubjectTypeDefinition.js";
@@ -17,7 +17,7 @@ interface CountItem {
 
 const renderItemCounts = (items: CountItem[], totalVoteCount: number) => items.map((item, i) => `#${i + 1} ${item.subjectId} (consensus: ${Math.round((item.count.votes / totalVoteCount) * 100)}%, score: ${item.count.score})`).join(', ')
 
-export const update: UpdateFn<ListSubject> = async (subject, updatedSubjects) => {
+export const update: UpdateFn<ListSubject, typeof ListSubjectValue, typeof ListSubjectValueReason> = async (subject, updatedSubjects) => {
   const engagementThresholdSubject = (await getUpdatedInputSubject(subject.inputs?.engagement, PercentSubject, updatedSubjects))
   const consensusThresholdSubject = (await getUpdatedInputSubject(subject.inputs?.consensus, PercentSubject, updatedSubjects))
 
@@ -60,7 +60,12 @@ export const update: UpdateFn<ListSubject> = async (subject, updatedSubjects) =>
   return {
     ...subject,
     value: consensusItems.map(item => item.subjectId),
-    valueReason: `${consensusItems.length} choices have reached consensus: ${renderItemCounts(consensusItems, allVotes.length)}. ${dissentItems.length} choices didn't make it ${renderItemCounts(dissentItems, allVotes.length)}`,
+    valueReason: [
+      `${consensusItems.length} choices have reached consensus`,
+      ...renderItemCounts(consensusItems, allVotes.length),
+      `${dissentItems.length} choices didn't make it`,
+      ...renderItemCounts(dissentItems, allVotes.length)
+    ],
     status: status,
     statusReason: reason
   }

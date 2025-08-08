@@ -1,9 +1,10 @@
 import {input} from "@inquirer/prompts";
 import {PercentSubject} from "./PercentSubject.js";
 import {VoteFn} from "../SubjectTypeDefinition.js";
-import {addValueVote, addVote} from "../addVote.js";
+import {addValueVote} from "../addVote.js";
+import {ZodType} from "zod";
 
-export const vote: VoteFn<PercentSubject> = async ({ subject, userId }) => {
+export const vote: VoteFn<PercentSubject, ZodType<number>, ZodType<string>> = async ({ subject, userId }) => {
   const voteValue = Number(await input({
     message: `Please enter your percent vote for ${subject.name}`,
       validate: (value: string) => {

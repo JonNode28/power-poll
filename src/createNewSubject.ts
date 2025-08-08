@@ -1,16 +1,16 @@
 import {input, select} from "@inquirer/prompts";
-import {Subject} from "./Subject.js";
-import subjectTypes from "./subject-types/index.js";
+import {UnknownSubject} from "./Subject.js";
+import subjectTypes, {getSubjectType} from "./subject-types/index.js";
 import {getSubjects, saveSubject} from "./store.js";
 import {Separator} from "@inquirer/prompts";
 
 const getExistingSubject = async (id: string) => (await getSubjects()).find(subject => subject.id === id)
 
-export const createNewSubject = async (userId: string, type?: string): Promise<Subject | undefined> => {
+export const createNewSubject = async (userId: string, type?: string): Promise<UnknownSubject | undefined> => {
   const selectedType = type
     ? {
       type,
-      subjectType: subjectTypes[type]
+      subjectType: getSubjectType(type)
     }
     : await select({
       message: 'What type of subject would you like to create?',
@@ -57,7 +57,7 @@ export const createNewSubject = async (userId: string, type?: string): Promise<S
     }
   })
 
-  const newSubject: Subject = selectedType.subjectType.generate({
+  const newSubject: UnknownSubject = selectedType.subjectType.generate({
     id: selectedId,
     name: selectedName,
     description: selectedDescription,

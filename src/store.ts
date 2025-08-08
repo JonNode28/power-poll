@@ -1,11 +1,9 @@
 import {Data} from "./Data.js";
 import ora from "ora";
 import fs from "fs/promises";
-import subjectTypes from "./subject-types/index.js";
-import {Subject} from "./Subject.js";
+import {getSubjectType} from "./subject-types/index.js";
+import {UnknownSubject} from "./Subject.js";
 import {User} from "./User.js";
-import {PercentSubject} from "./subject-types/percent/PercentSubject.js";
-import z from "zod";
 
 let data: Data
 
@@ -20,7 +18,7 @@ async function get() {
     return data
   }
   spinner.info('First run. Initialising data')
-  const percentDefinition = subjectTypes['percent']
+  const percentDefinition = getSubjectType('percent')
   const engagementThreshold = percentDefinition.generate({
     id: 'engagement-threshold',
     name: 'Engagement Threshold',
@@ -70,12 +68,13 @@ export async function getSubjects() {
   return (await get()).subjects
 }
 
-export async function saveSubject<S extends Subject>(subject: S) {
-  const updatedSubjects:Subject[] = data.subjects.filter(existingSubject => existingSubject.id !== subject.id)
-  updatedSubjects.push(subject)
+export async function saveSubject(subject: UnknownSubject) {
   const newData = {
     ...data,
-    subjects: updatedSubjects
+    subjects: [
+      ...data.subjects.filter(existingSubject => existingSubject.id !== subject.id),
+      subject
+    ]
   }
   await set(newData)
   return subject

@@ -2,8 +2,9 @@ import {PercentSubject} from "./PercentSubject.js";
 import {UpdateFn} from "../SubjectTypeDefinition.js";
 import {generateStatusWithReason} from "../../generateStatusWithReason.js";
 import {isRejected} from "../../Subject.js";
+import {ZodType} from "zod";
 
-export const update: UpdateFn<PercentSubject> = async (subject) => {
+export const update: UpdateFn<PercentSubject, ZodType<number>, ZodType<string>> = async (subject) => {
   const percentSubject = PercentSubject.parse(subject)
   const allVotes = Object.values(percentSubject.votes)
   const newTotal = allVotes

@@ -6,10 +6,11 @@ import {PercentSubject} from "../percent/PercentSubject.js";
 import {getUpdatedInputSubject} from "../../getUpdatedInputSubject.js";
 import {update} from "./update.js";
 import {generateBaseSubject} from "../generateBaseSubject.js";
+import {ZodType} from "zod";
 
 
 
-export const TextDefinition: SubjectTypeDefinition<TextSubject> = {
+export const TextDefinition: SubjectTypeDefinition<TextSubject, ZodType<string>, ZodType<string>> = {
   id: 'text',
   name: 'Text',
   description: 'Establishes consensus around a piece of text',
