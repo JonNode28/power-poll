@@ -13,7 +13,7 @@ export const PercentDefinition: SubjectTypeDefinition<PercentSubject, ZodType<nu
   description: 'Establishes consensus around a percentage (0-100)',
   schema: PercentSubject,
   inputs: [],
-  generate: (setup) => generateBaseSubject({ type: 'percent', setup }),
+  create: (setup) => generateBaseSubject({ type: 'percent', setup }),
   vote,
   update
 }

@@ -16,7 +16,7 @@ export const TextDefinition: SubjectTypeDefinition<TextSubject, ZodType<string>,
     { id: 'engagement', type: 'percent' },
     { id: 'consensus', type: 'percent' }
   ],
-  generate: (setup) => generateBaseSubject({ type: 'text', setup }),
+  create: (setup) => generateBaseSubject({ type: 'text', setup }),
   vote,
   update
 }

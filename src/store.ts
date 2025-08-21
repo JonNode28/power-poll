@@ -19,7 +19,7 @@ async function get() {
   }
   spinner.info('First run. Initialising data')
   const percentDefinition = getSubjectType('percent')
-  const engagementThreshold = percentDefinition.generate({
+  const engagementThreshold = percentDefinition.create({
     id: 'engagement-threshold',
     name: 'Engagement Threshold',
     description: 'How much engagement is required for a vote to become active',
@@ -28,7 +28,7 @@ async function get() {
     status: 'pending',
     statusReason: [{ status: 'pending', reason: 'Newly created' }]
   })
-  const consensusThreshold = percentDefinition.generate({
+  const consensusThreshold = percentDefinition.create({
     id: 'consensus-threshold',
     name: 'Consensus Threshold',
     description: 'How much consensus is required for a vote to become active',

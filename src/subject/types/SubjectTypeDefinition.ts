@@ -24,7 +24,7 @@ export interface SubjectTypeDefinition<S extends Subject<V, VR>, V extends ZodTy
   description: string
   schema: z.infer<S>
   inputs: InputDefinition[]
-  generate: (setup: Partial<S>) => S
+  create: (setup: Partial<S>) => S
   vote: VoteFn<S, V, VR>,
   update: UpdateFn<S, V, VR>
 }

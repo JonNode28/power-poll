@@ -15,7 +15,7 @@ export const ListDefinition: SubjectTypeDefinition<ListSubject, typeof ListSubje
     { id: 'engagement', type: 'percent' },
     { id: 'consensus', type: 'percent' },
   ],
-  generate: (setup) => generateBaseSubject({ type: 'list', setup }),
+  create: (setup) => generateBaseSubject({ type: 'list', setup }),
   vote,
   update
 }

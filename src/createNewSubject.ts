@@ -57,7 +57,7 @@ export const createNewSubject = async (userId: string, type?: string): Promise<U
     }
   })
 
-  const newSubject: UnknownSubject = selectedType.subjectType.generate({
+  const newSubject: UnknownSubject = selectedType.subjectType.create({
     id: selectedId,
     name: selectedName,
     description: selectedDescription,
