@@ -11,7 +11,7 @@ console.log('Welcome to ✨Power Poll ✨')
 
 console.clear()
 
-const TABLE_HEADERS = [ 'name', 'type', 'value', 'status', 'statusReason' ]
+const TABLE_HEADERS = [ 'name', 'type', 'value', 'status' ]
 
 const userId = await auth()
 
