@@ -1,9 +1,6 @@
 import {SubjectTypeDefinition} from "../SubjectTypeDefinition.js";
 import {vote} from "./vote.js";
 import {ListSubject, ListSubjectValue, ListSubjectValueReason} from "./ListSubject.js";
-import {getUsers} from "../../store.js";
-import {PercentSubject} from "../percent/PercentSubject.js";
-import {getUpdatedInputSubject} from "../../getUpdatedInputSubject.js";
 import {update} from "./update.js";
 import {generateBaseSubject} from "../generateBaseSubject.js";
 

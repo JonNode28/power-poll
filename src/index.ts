@@ -1,11 +1,11 @@
 import { input } from '@inquirer/prompts';
 import { select, Separator } from '@inquirer/prompts';
 import {createNewSubject} from "./createNewSubject.js";
-import {RejectedVote, Subject, UnknownSubject} from "./Subject.js";
-import subjectTypes, {getSubjectType} from "./subject-types/index.js";
+import {getSubjectType} from "./subject/types/index.js";
 import {getSubjects, getUsers, saveSubject, setUser} from "./store.js";
-import {getUpdatedSubjects} from "./getUpdatedSubjects.js";
 import {ZodType} from "zod";
+import {getUpdatedSubjects} from "./subject/getUpdatedSubjects.js";
+import {RejectedVote, Subject, UnknownSubject} from "./subject/Subject.js";
 
 console.log('Welcome to ✨Power Poll ✨')
 

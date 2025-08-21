@@ -1,7 +1,6 @@
 import {getUpdatedInputSubject} from "../../getUpdatedInputSubject.js";
 import {ListSubject, ListSubjectValue, ListSubjectValueReason} from "./ListSubject.js";
 import {PercentSubject} from "../percent/PercentSubject.js";
-import {getUsers} from "../../store.js";
 import {UpdateFn} from "../SubjectTypeDefinition.js";
 import {getEngagementThresholdMetStatusAndReason} from "../../getEngagementThresholdMetStatusAndReason.js";
 import {generateStatusWithReason} from "../../generateStatusWithReason.js";

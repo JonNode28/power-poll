@@ -1,7 +1,7 @@
-import {getSubjects} from "./store.js";
 import {Subject} from "./Subject.js";
-import {getSubjectType} from "./subject-types/index.js";
 import {ZodType} from "zod";
+import {getSubjects} from "../store.js";
+import {getSubjectType} from "./types/index.js";
 
 export const getUpdatedSubjects = async () => {
   const subjects = await getSubjects()

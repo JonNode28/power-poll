@@ -115,51 +115,6 @@
       "voteArchive": []
     },
     {
-      "id": "group-name",
-      "name": "Group Name",
-      "description": "",
-      "type": "text",
-      "author": "jon",
-      "inputs": {
-        "engagement": "engagement-threshold",
-        "consensus": "consensus-threshold"
-      },
-      "status": "pending",
-      "statusReason": [
-        {
-          "status": "active",
-          "reason": "Less than 50% (0%) of votes were rejections"
-        },
-        {
-          "status": "pending",
-          "reason": "Engagement 33% is below threshold of 80%"
-        },
-        {
-          "status": "active",
-          "reason": "Consensus threshold of 50% met by \"jons awesome group\" with consensus of 100%\""
-        }
-      ],
-      "value": "jons awesome group",
-      "valueReason": "votes by popularity: #1 jons awesome group (1)",
-      "rejected": false,
-      "valueArchive": [],
-      "votes": {
-        "jon": {
-          "timestamp": "2025-08-06T15:32:35.799Z",
-          "value": "Jons Awesome Group"
-        }
-      },
-      "voteArchive": [
-        {
-          "userId": "jon",
-          "vote": {
-            "timestamp": "2025-08-06T15:32:35.799Z",
-            "value": "Jons Awesome Group"
-          }
-        }
-      ]
-    },
-    {
       "id": "home-page-items",
       "name": "Home Page Items",
       "description": "",
@@ -432,6 +387,58 @@
               "consensus-threshold",
               "engagement-threshold"
             ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "group-name",
+      "name": "Group Name",
+      "description": "",
+      "type": "text",
+      "author": "jon",
+      "inputs": {
+        "engagement": "engagement-threshold",
+        "consensus": "consensus-threshold"
+      },
+      "status": "pending",
+      "statusReason": [
+        {
+          "status": "active",
+          "reason": "Less than 50% (0%) of votes were rejections"
+        },
+        {
+          "status": "pending",
+          "reason": "Engagement 33% is below threshold of 80%"
+        },
+        {
+          "status": "active",
+          "reason": "Consensus threshold of 50% met by \"test!\" with consensus of 100%\""
+        }
+      ],
+      "value": "test!",
+      "valueReason": "votes by popularity: #1 test! (1)",
+      "rejected": false,
+      "valueArchive": [],
+      "votes": {
+        "jon": {
+          "timestamp": "2025-08-21T07:39:46.271Z",
+          "value": "Test!"
+        }
+      },
+      "voteArchive": [
+        {
+          "userId": "jon",
+          "vote": {
+            "timestamp": "2025-08-06T15:32:35.799Z",
+            "value": "Jons Awesome Group"
+          }
+        },
+        {
+          "userId": "jon",
+          "vote": {
+            "timestamp": "2025-08-21T07:39:46.271Z",
+            "value": "Test!"
           }
         }
       ]

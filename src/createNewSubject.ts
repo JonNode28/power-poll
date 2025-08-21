@@ -1,8 +1,8 @@
 import {input, select} from "@inquirer/prompts";
-import {UnknownSubject} from "./Subject.js";
-import subjectTypes, {getSubjectType} from "./subject-types/index.js";
+import subjectTypes, {getSubjectType} from "./subject/types/index.js";
 import {getSubjects, saveSubject} from "./store.js";
 import {Separator} from "@inquirer/prompts";
+import {UnknownSubject} from "./subject/Subject.js";
 
 const getExistingSubject = async (id: string) => (await getSubjects()).find(subject => subject.id === id)
 

@@ -1,8 +1,8 @@
 import {z} from "zod";
-import {getSubjects, saveSubject} from "./store.js";
-import {getSubjectType} from "./subject-types/index.js";
 import { SubjectSchema, UnknownSubject} from "./Subject.js";
 import {ZodType} from "zod";
+import {getSubjects, saveSubject} from "../store.js";
+import {getSubjectType} from "./types/index.js";
 
 export const getUpdatedInputSubject = async <S extends SubjectSchema<V, VR>, V extends ZodType, VR extends ZodType>(subjectId: string | undefined, SubjectSchema: S, updatedSubjects: Record<string, UnknownSubject>): Promise<z.infer<S> | undefined> => {
   if(!subjectId) return

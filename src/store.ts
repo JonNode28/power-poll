@@ -1,9 +1,9 @@
 import {Data} from "./Data.js";
 import ora from "ora";
 import fs from "fs/promises";
-import {getSubjectType} from "./subject-types/index.js";
-import {UnknownSubject} from "./Subject.js";
+import {getSubjectType} from "./subject/types/index.js";
 import {User} from "./User.js";
+import {UnknownSubject} from "./subject/Subject.js";
 
 let data: Data
 
@@ -64,7 +64,7 @@ export async function setUser(user: User) {
   })
 }
 
-export async function getSubjects() {
+export async function getSubjects():Promise<UnknownSubject[]> {
   return (await get()).subjects
 }
 

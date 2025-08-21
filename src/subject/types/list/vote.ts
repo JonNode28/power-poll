@@ -1,8 +1,8 @@
 import {ListSubject, ListSubjectValue, ListSubjectValueReason} from "./ListSubject.js";
 import {VoteFn} from "../SubjectTypeDefinition.js";
 import {addValueVote} from "../addVote.js";
-import {getSubjects} from "../../store.js";
 import {select, Separator} from "@inquirer/prompts";
+import {getSubjects} from "../../../store.js";
 
 export const vote: VoteFn<ListSubject, typeof ListSubjectValue, typeof ListSubjectValueReason> = async ({ subject, userId}) => {
 

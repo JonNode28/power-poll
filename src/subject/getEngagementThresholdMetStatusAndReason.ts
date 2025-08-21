@@ -1,6 +1,6 @@
-import {PercentSubject} from "./subject-types/percent/PercentSubject.js";
-import {getUsers} from "./store.js";
 import {CriteriaResult} from "./generateStatusWithReason.js";
+import {getUsers} from "../store.js";
+import {PercentSubject} from "./types/percent/PercentSubject.js";
 
 export const getEngagementThresholdMetStatusAndReason = async (voteCount: number, engagementThresholdSubject: PercentSubject | undefined): Promise<CriteriaResult> => {
   if(!engagementThresholdSubject) return { status: 'active', reason: 'No engagement threshold input is defined' }

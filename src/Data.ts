@@ -1,6 +1,6 @@
 import {z} from "zod";
-import {UnknownSubject} from "./Subject.js";
 import {User} from "./User.js";
+import {UnknownSubject} from "./subject/Subject.js";
 
 export const Data = z.object({
   subjects: UnknownSubject.array(),
