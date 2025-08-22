@@ -8,6 +8,6 @@ export const TextSubjectVote = z.looseObject({
 
 export type TextSubjectVote = z.infer<typeof TextSubjectVote>
 
-export const TextSubject = createSubjectSchema(z.string(), z.string())
+export const TextSubject = createSubjectSchema(z.string(), z.string(), 'text')
 
 export type TextSubject = z.infer<typeof TextSubject>

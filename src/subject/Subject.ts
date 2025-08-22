@@ -24,12 +24,12 @@ export const createVoteSchema = <V extends ZodType>(valueSchema: V) => {
 
 export type Vote<V extends ZodType> = z.infer<ReturnType<typeof createVoteSchema<V>>>
 
-export const createSubjectSchema = <V extends ZodType, VR extends ZodType>(valueSchema: V, valueReasonSchema: VR) => {
+export const createSubjectSchema = <V extends ZodType, VR extends ZodType>(valueSchema: V, valueReasonSchema: VR, id?: string) => {
   return z.object({
     id: z.string(),
     name: z.string(),
     description: z.string(),
-    type: z.string(),
+    type: id ? z.literal(id) : z.string(),
     author: z.string(),
     inputs: z.record(z.string(), z.string()).optional(),
     status: SubjectStatus,
