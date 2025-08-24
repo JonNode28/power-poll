@@ -1,4 +1,4 @@
-import {createSubjectSchema, Subject} from "../../Subject.js";
+import {createSubjectSchema} from "../../Subject.js";
 import z from "zod";
 
 export const ListSubjectValue = z.string().array()
@@ -8,7 +8,9 @@ export const ListSubjectValueReason = z.string().array()
 export type ListSubjectValueReason = z.infer<typeof ListSubjectValueReason>
 
 export const ListSubject = createSubjectSchema(ListSubjectValue, ListSubjectValueReason, 'list').extend({
-  types: z.string().array().optional(),
+  engagementInput: z.string(),
+  consensusInput: z.string(),
+  structureInput: z.string().optional()
 })
 
 export type ListSubject = z.infer<typeof ListSubject>

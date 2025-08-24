@@ -14,11 +14,11 @@ interface CountItem {
   }
 }
 
-const renderItemCounts = (items: CountItem[], totalVoteCount: number) => items.map((item, i) => `#${i + 1} ${item.subjectId} (consensus: ${Math.round((item.count.votes / totalVoteCount) * 100)}%, score: ${item.count.score})`).join(', ')
+const renderItemCounts = (items: CountItem[], totalVoteCount: number) => items.map((item, i) => `#${i + 1} ${item.subjectId} (consensus: ${Math.round((item.count.votes / totalVoteCount) * 100)}%, score: ${item.count.score})`)
 
 export const update: UpdateFn<ListSubject, typeof ListSubjectValue, typeof ListSubjectValueReason> = async (subject, updatedSubjects) => {
-  const engagementThresholdSubject = (await getUpdatedInputSubject(subject.inputs?.engagement, PercentSubject, updatedSubjects))
-  const consensusThresholdSubject = (await getUpdatedInputSubject(subject.inputs?.consensus, PercentSubject, updatedSubjects))
+  const engagementThresholdSubject = (await getUpdatedInputSubject(subject.engagementInput, PercentSubject, updatedSubjects))
+  const consensusThresholdSubject = (await getUpdatedInputSubject(subject.consensusInput, PercentSubject, updatedSubjects))
 
   const allVotes = Object.values(subject.votes)
   const counts = allVotes.reduce<Record<string, { votes: number, score: number}>>((a, c) => {

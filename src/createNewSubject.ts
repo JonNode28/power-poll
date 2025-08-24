@@ -1,5 +1,5 @@
 import {input, select} from "@inquirer/prompts";
-import subjectTypes, {getSubjectType} from "./subject/types/index.js";
+import {getAllSubjectTypes, getSubjectType} from "./subject/types/index.js";
 import {getSubjects, saveSubject} from "./store.js";
 import {Separator} from "@inquirer/prompts";
 import {UnknownSubject} from "./subject/Subject.js";
@@ -14,7 +14,7 @@ export const createNewSubject = async (userId: string, type?: string): Promise<U
     }
     : await select({
       message: 'What type of subject would you like to create?',
-      choices: Object.entries(subjectTypes).map(([type, subjectType]) => ({
+      choices: Object.entries(getAllSubjectTypes()).map(([type, subjectType]) => ({
         name: subjectType.name,
         value: {
           type,
@@ -57,66 +57,20 @@ export const createNewSubject = async (userId: string, type?: string): Promise<U
     }
   })
 
-  const newSubject: UnknownSubject = selectedType.subjectType.create({
+  const newSubject = await selectedType.subjectType.createSubject({
     id: selectedId,
     name: selectedName,
     description: selectedDescription,
     type: selectedType.type,
     author: userId,
     votes: {},
-    inputs: {},
     status: 'pending',
     statusReason: [ { status: 'pending', reason: 'Newly created' } ],
   })
 
-  if (!selectedType.subjectType.inputs?.length) return await saveSubject(newSubject)
-  console.log(`This subject type has ${selectedType.subjectType.inputs.length}:`)
-  console.table(selectedType.subjectType.inputs)
-  for (const inputDefinition of selectedType.subjectType.inputs) {
-    const compatibleInputs = (await getSubjects()).filter(subject => subject.type === inputDefinition.type)
-    //
-    // if (!compatibleInputs.length) {
-    //   console.log(`There are no compatible "${inputDefinition.type}" subjects for the "${inputDefinition.id}". Please create one first.`)
-    //   const newInput = await createNewSubject(userId, inputDefinition.type)
-    //   if (!newInput) {
-    //     console.log(`Couldn't create the new input`)
-    //     return
-    //   }
-    //   await saveSubject(newInput)
-    // }
-    //
-    if (!compatibleInputs.length) {
-      if(inputDefinition.optional){
-        console.log(`Couldn't find a "${inputDefinition.type}" subject for the "${inputDefinition.id}" input. Skipping as it's optional anyway...`)
-        continue
-      } else {
-        console.log(`Couldn't find a "${inputDefinition.type}" subject for the "${inputDefinition.id}" input. This input is not optional so you'll need to create one first.`)
-        return
-      }
-    }
-
-    const selectedAction = await select({
-      message: `Please select a ${inputDefinition.id} input subject`,
-      choices: [
-        ...compatibleInputs.map(subject => ({
-          name: subject.name,
-          description: subject.description,
-          value: () =>{
-            if(!newSubject.inputs) newSubject.inputs = {}
-            newSubject.inputs[inputDefinition.id] = subject.id
-          },
-        })),
-        new Separator(),
-        ...inputDefinition.optional
-          ? [{
-            name: 'Skip',
-            description: 'This input is optional',
-            value: () => console.log('Skipping...')
-          }]
-          : []
-      ]
-    })
-    selectedAction()
+  if(!newSubject){
+    console.log('Could not created subject')
+    return
   }
 
   await saveSubject(newSubject)

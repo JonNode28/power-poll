@@ -1,7 +1,7 @@
 import { input } from '@inquirer/prompts';
 import { select, Separator } from '@inquirer/prompts';
 import {createNewSubject} from "./createNewSubject.js";
-import {getSubjectType} from "./subject/types/index.js";
+import {getSubjectType, getSubjectTypeBySubject} from "./subject/types/index.js";
 import {getSubjects, getUsers, saveSubject, setUser} from "./store.js";
 import {ZodType} from "zod";
 import {getUpdatedSubjects} from "./subject/getUpdatedSubjects.js";
@@ -101,8 +101,12 @@ async function detail(subject: UnknownSubject){
   console.log(`Subject: ${subject.name}`)
   console.log(`Type: ${subject.type}`)
   console.log('Inputs:')
-  if(subject.inputs?.length) console.table(subject.inputs)
-  else console.log('This subject has no inputs')
+  const subjectType = getSubjectTypeBySubject(subject)
+  if(subjectType.getInputs){
+    const inputs = subjectType.getInputs(subject)
+    if(inputs?.length) console.table(inputs)
+    else console.log('This subject has no inputs')
+  } else console.log(`Subject of type "${subject.type}" doesn't have inputs`)
   console.log(subject.description)
   console.log()
   const action = await select({

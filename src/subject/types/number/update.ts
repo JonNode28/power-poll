@@ -8,9 +8,9 @@ import {isRejected} from "../../Subject.js";
 import {ZodType} from "zod";
 
 export const update: UpdateFn<NumberSubject, ZodType<number>, ZodType<string>> = async (subject, updatedSubjects) => {
-  const minValueSubject = (await getUpdatedInputSubject(subject.inputs?.min, NumberSubject, updatedSubjects))
-  const maxValueSubject = (await getUpdatedInputSubject(subject.inputs?.max, NumberSubject, updatedSubjects))
-  const engagementThresholdSubject = (await getUpdatedInputSubject(subject.inputs?.engagement, PercentSubject, updatedSubjects))
+  const minValueSubject = (await getUpdatedInputSubject(subject.minInput, NumberSubject, updatedSubjects))
+  const maxValueSubject = (await getUpdatedInputSubject(subject.maxInput, NumberSubject, updatedSubjects))
+  const engagementThresholdSubject = (await getUpdatedInputSubject(subject.engagementInput, PercentSubject, updatedSubjects))
 
   const allVotes = Object.values(subject.votes)
   const newTotal = allVotes.reduce((runningTotal, vote) => {

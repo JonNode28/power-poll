@@ -31,7 +31,6 @@ export const createSubjectSchema = <V extends ZodType, VR extends ZodType>(value
     description: z.string(),
     type: id ? z.literal(id) : z.string(),
     author: z.string(),
-    inputs: z.record(z.string(), z.string()).optional(),
     status: SubjectStatus,
     statusReason: CriteriaResult.array(),
     valueUpdatedTimestamp: z.iso.datetime().optional(),

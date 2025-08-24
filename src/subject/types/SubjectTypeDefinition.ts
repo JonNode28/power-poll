@@ -10,21 +10,23 @@ export interface SubjectVoterProps<S> {
 export type VoteFn<S extends Subject<V, VR>, V extends ZodType, VR extends ZodType> = ({ subject, userId }: SubjectVoterProps<S>) => Promise<S> | S
 export type UpdateFn<S extends Subject<V, VR>, V extends ZodType, VR extends ZodType> = (subject: S, updatedSubjects: Record<string, UnknownSubject>) => Promise<S> | S
 
-export const InputDefinition = z.object({
-  id: z.string(),
-  type: z.string(),
+export const Input = z.object({
+  name: z.string(),
+  subjectId: z.string().optional(),
+  description: z.string().optional(),
   optional: z.boolean().optional()
 })
 
-export type InputDefinition = z.infer<typeof InputDefinition>
+export type Input = z.infer<typeof Input>
 
-export interface SubjectTypeDefinition<S extends Subject<V, VR>, V extends ZodType, VR extends ZodType> {
+export interface SubjectTypeDefinition<S extends Subject<V, VR>, V extends ZodType, VR extends ZodType, SS extends ZodType = ZodUnknown> {
   id: string
   name: string
   description: string
-  schema: z.infer<S>
-  inputs: InputDefinition[]
-  create: (setup: Partial<S>) => S
-  vote: VoteFn<S, V, VR>,
+  subjectSchema: z.infer<S>
+  getInputs?: (subject: S) => Input[]
+  createSubject: (setup: Partial<S>) => Promise<S | undefined>
+  createStructure?: () => SS | Promise<SS>
+  vote: VoteFn<S, V, VR>
   update: UpdateFn<S, V, VR>
 }

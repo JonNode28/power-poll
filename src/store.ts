@@ -19,26 +19,27 @@ async function get() {
   }
   spinner.info('First run. Initialising data')
   const percentDefinition = getSubjectType('percent')
-  const engagementThreshold = percentDefinition.create({
+  const engagementThreshold = await percentDefinition.createSubject({
     id: 'engagement-threshold',
     name: 'Engagement Threshold',
     description: 'How much engagement is required for a vote to become active',
     author: 'system',
-    inputs: {},
     status: 'pending',
     statusReason: [{ status: 'pending', reason: 'Newly created' }]
   })
-  const consensusThreshold = percentDefinition.create({
+  if(!engagementThreshold) throw new Error(`An engagement threshold subject is required`)
+  const consensusThreshold = await percentDefinition.createSubject({
     id: 'consensus-threshold',
     name: 'Consensus Threshold',
     description: 'How much consensus is required for a vote to become active',
     author: 'system',
-    inputs: {},
     status: 'pending',
     statusReason: [{ status: 'pending', reason: 'Newly created' }]
   })
+  if(!consensusThreshold) throw new Error(`A consensus threshold subject is required`)
   data = {
     subjects: [ engagementThreshold, consensusThreshold ],
+    voteConstraints: [],
     users: {}
   }
   return data
