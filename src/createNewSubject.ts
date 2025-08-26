@@ -14,14 +14,24 @@ export const createNewSubject = async (userId: string, type?: string): Promise<U
     }
     : await select({
       message: 'What type of subject would you like to create?',
-      choices: Object.entries(getAllSubjectTypes()).map(([type, subjectType]) => ({
-        name: subjectType.name,
-        value: {
-          type,
-          subjectType
+      choices: [
+        ...Object.entries(getAllSubjectTypes()).map(([type, subjectType]) => ({
+          name: subjectType.name,
+          value: {
+            type,
+            subjectType
+          }
+        })),
+        new Separator(),
+        {
+          name: 'Cancel',
+          value: null
         }
-      }))
+      ]
     })
+  if(!selectedType){
+    return
+  }
   if (!selectedType.subjectType) {
     console.log(`Couldn't find a definition for "${type}" subject type`)
     return
@@ -65,10 +75,10 @@ export const createNewSubject = async (userId: string, type?: string): Promise<U
     author: userId,
     votes: {},
     status: 'pending',
-    statusReason: [ { status: 'pending', reason: 'Newly created' } ],
+    statusReason: [{status: 'pending', reason: 'Newly created'}],
   })
 
-  if(!newSubject){
+  if (!newSubject) {
     console.log('Could not created subject')
     return
   }
