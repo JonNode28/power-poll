@@ -49,9 +49,9 @@ export const ListDefinition: SubjectTypeDefinition<ListSubject, typeof ListSubje
       if (max !== undefined) listStructure.max = max
     }
     const itemStructureType = await select({
-      message: 'What type of item structure would you like to use?',
+      message: 'What type of structure would you like to use?',
       choices: [
-        {name: 'Items', description: 'select structure(s) that items must meet', value: 'items'},
+        {name: 'Items', description: 'Each item in the list must meet at least one structure', value: 'items'},
         {name: 'None', description: 'Items can have any structure', value: 'none'},
       ]
     })

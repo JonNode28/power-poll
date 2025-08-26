@@ -10,7 +10,7 @@ export type ListSubjectValueReason = z.infer<typeof ListSubjectValueReason>
 export const ListSubject = createSubjectSchema(ListSubjectValue, ListSubjectValueReason, 'list').extend({
   engagementInput: z.string(),
   consensusInput: z.string(),
-  structureInput: z.string().optional()
+  structureInput: z.string().optional(),
 })
 
 export type ListSubject = z.infer<typeof ListSubject>
