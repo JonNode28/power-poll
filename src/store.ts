@@ -6,6 +6,7 @@ import {User} from "./User.js";
 import {UnknownSubject} from "./subject/Subject.js";
 
 let data: Data
+const DATA_PATH = './src/data.json'
 
 async function get() {
   if (data) return data
@@ -82,8 +83,14 @@ export async function saveSubject(subject: UnknownSubject) {
 }
 
 async function tryLoadData() {
-  const dataRaw = await fs.readFile('./src/data.json')
-  if (dataRaw.length === 0) return
+  let dataRaw
+  try{
+    dataRaw = await fs.readFile(DATA_PATH)
+  } catch(err: any){
+    if(err.code === 'ENOENT') dataRaw = await fs.writeFile(DATA_PATH, '')
+    else throw err
+  }
+  if (!dataRaw?.length) return
   try {
     return JSON.parse(dataRaw.toString())
   } catch (err) {
