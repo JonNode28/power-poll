@@ -1,6 +1,7 @@
 import {z, ZodUnknown} from "zod";
 import {Subject, UnknownSubject} from "../Subject.js";
 import {ZodType} from "zod";
+import {UnknownSubjectStructure} from "../SubjectStructure.js";
 
 export interface SubjectVoterProps<S> {
   subject: S,
@@ -19,14 +20,18 @@ export const Input = z.object({
 
 export type Input = z.infer<typeof Input>
 
-export interface SubjectTypeDefinition<S extends Subject<V, VR>, V extends ZodType, VR extends ZodType, SS extends ZodType = ZodUnknown> {
+export interface SubjectTypeDefinition<
+  S extends Subject<V, VR>,
+  V extends ZodType,
+  VR extends ZodType
+> {
   id: string
   name: string
   description: string
   subjectSchema: z.infer<S>
   getInputs?: (subject: S) => Input[]
   createSubject: (setup: Partial<S>) => Promise<S | undefined>
-  createStructure?: () => SS | Promise<SS>
+  createStructure?: () => UnknownSubjectStructure | Promise<UnknownSubjectStructure>
   vote: VoteFn<S, V, VR>
   update: UpdateFn<S, V, VR>
 }

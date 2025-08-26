@@ -15,16 +15,16 @@ const subjectTypes: Record<string, unknown> = {
   [TextDefinition.id]: TextDefinition,
 }
 
-export const getSubjectType = <S extends Subject<V, VR>, V extends ZodType, VR extends ZodType, SS extends ZodType>(type: string): SubjectTypeDefinition<S, V, VR, SS> => {
+export const getSubjectType = <S extends Subject<V, VR>, V extends ZodType, VR extends ZodType>(type: string): SubjectTypeDefinition<S, V, VR> => {
   const subjectType = subjectTypes[type]
-  return subjectType as SubjectTypeDefinition<S, V, VR, SS>
+  return subjectType as SubjectTypeDefinition<S, V, VR>
 }
 
-export const getSubjectTypeBySubject = <S extends Subject<V, VR>, V extends ZodType, VR extends ZodType, SS extends ZodType>(subject: S): SubjectTypeDefinition<S, V, VR, SS> => {
+export const getSubjectTypeBySubject = <S extends Subject<V, VR>, V extends ZodType, VR extends ZodType>(subject: S): SubjectTypeDefinition<S, V, VR> => {
   const subjectType = subjectTypes[subject.type]
-  return subjectType as SubjectTypeDefinition<S, V, VR, SS>
+  return subjectType as SubjectTypeDefinition<S, V, VR>
 }
 
 export const getAllSubjectTypes = () => {
-  return Object.values(subjectTypes) as SubjectTypeDefinition<UnknownSubject, ZodUnknown, ZodUnknown, ZodUnknown>[]
+  return Object.values(subjectTypes) as SubjectTypeDefinition<UnknownSubject, ZodUnknown, ZodUnknown>[]
 }

@@ -1,14 +1,15 @@
 import {SubjectTypeDefinition} from "../SubjectTypeDefinition.js";
 import {vote} from "./vote.js";
-import {StructureSubject, StructureSubjectValue, StructureSubjectValueReason} from "./StructureSubject.js";
+import {StructureSubject, StructureSubjectValueReason} from "./StructureSubject.js";
 import {update} from "./update.js";
 import {generateBaseSubject} from "../generateBaseSubject.js";
 import {select} from "@inquirer/prompts";
 import {getAllSubjectTypes} from "../index.js";
 import {getSubjects} from "../../../store.js";
 import {selectInput} from "../../selectInput.js";
+import {UnknownSubjectStructure} from "../../SubjectStructure.js";
 
-export const StructureDefinition: SubjectTypeDefinition<StructureSubject, typeof StructureSubjectValue, typeof StructureSubjectValueReason> = {
+export const StructureDefinition: SubjectTypeDefinition<StructureSubject, typeof UnknownSubjectStructure, typeof StructureSubjectValueReason> = {
   id: 'structure',
   name: 'Structure',
   description: 'Consensus around a subject structure',
@@ -16,10 +17,12 @@ export const StructureDefinition: SubjectTypeDefinition<StructureSubject, typeof
   createSubject: async (setup) => {
     const allSubjects = await getSubjects()
     const engagement = await selectInput('engagement', true, allSubjects.filter(subject => subject.type === 'percent'))
+    const subjectsWithStructure = getAllSubjectTypes()
+      .filter(subjectType => subjectType.createStructure)
+    if(!subjectsWithStructure.length) throw new Error('There are no subjects with structure')
     const structureSubjectType = await select({
       message: 'What type of structure would you like to make?',
-      choices: getAllSubjectTypes()
-        .filter(subjectType => subjectType.createStructure)
+      choices: subjectsWithStructure
         .map(subjectType => ({
           name: subjectType.name,
           value: subjectType
@@ -29,12 +32,9 @@ export const StructureDefinition: SubjectTypeDefinition<StructureSubject, typeof
     if(!structureSubjectType.createStructure) throw new Error()
 
     return {
-      ...generateBaseSubject({ type: 'structure', setup }),
+      ...generateBaseSubject({type: 'structure', setup}),
       engagementInput: engagement?.id,
-      structure: {
-        type: structureSubjectType.id,
-        body: structureSubjectType.createStructure()
-      }
+      value: await structureSubjectType.createStructure()
     }
   },
   vote,

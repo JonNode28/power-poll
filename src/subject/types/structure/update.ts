@@ -1,10 +1,11 @@
 import {getUpdatedInputSubject} from "../../getUpdatedInputSubject.js";
-import {StructureSubject, StructureSubjectValue, StructureSubjectValueReason} from "./StructureSubject.js";
+import {StructureSubject, StructureSubjectValueReason} from "./StructureSubject.js";
 import {PercentSubject} from "../percent/PercentSubject.js";
 import {UpdateFn} from "../SubjectTypeDefinition.js";
 import {getEngagementThresholdMetStatusAndReason} from "../../getEngagementThresholdMetStatusAndReason.js";
 import {generateStatusWithReason} from "../../generateStatusWithReason.js";
 import {isRejected} from "../../Subject.js";
+import {UnknownSubjectStructure} from "../../SubjectStructure.js";
 
 interface CountItem {
   subjectId: string,
@@ -14,9 +15,7 @@ interface CountItem {
   }
 }
 
-const renderItemCounts = (items: CountItem[], totalVoteCount: number) => items.map((item, i) => `#${i + 1} ${item.subjectId} (consensus: ${Math.round((item.count.votes / totalVoteCount) * 100)}%, score: ${item.count.score})`).join(', ')
-
-export const update: UpdateFn<StructureSubject, typeof StructureSubjectValue, typeof StructureSubjectValueReason> = async (subject, updatedSubjects) => {
+export const update: UpdateFn<StructureSubject, typeof UnknownSubjectStructure, typeof StructureSubjectValueReason> = async (subject, updatedSubjects) => {
   const engagementThresholdSubject = (await getUpdatedInputSubject(subject.engagementInput, PercentSubject, updatedSubjects))
 
   const allVotes = Object.values(subject.votes)
@@ -32,7 +31,6 @@ export const update: UpdateFn<StructureSubject, typeof StructureSubjectValue, ty
 
   return {
     ...subject,
-    value: true,
     valueReason: [
       `${accepted} accepted the structure`,
       `${rejected} rejected the structure`,
