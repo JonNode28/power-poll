@@ -32,6 +32,7 @@ export interface SubjectTypeDefinition<
   getInputs?: (subject: S) => Input[]
   createSubject: (setup: Partial<S>) => Promise<S | undefined>
   createStructure?: () => UnknownSubjectStructure | Promise<UnknownSubjectStructure>
+  validate?: (subject: S, structure: UnknownSubjectStructure) => { valid: boolean, reasons?: string[] }
   vote: VoteFn<S, V, VR>
   update: UpdateFn<S, V, VR>
 }

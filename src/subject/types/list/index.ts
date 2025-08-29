@@ -33,6 +33,7 @@ export const ListDefinition: SubjectTypeDefinition<ListSubject, typeof ListSubje
 
     return {
       ...newSubject,
+      valueReason: [ 'Newly created' ],
       engagementInput: engagement.id,
       consensusInput: consensus.id,
       structureInput: structure?.id

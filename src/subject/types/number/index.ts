@@ -24,6 +24,7 @@ export const NumberDefinition: SubjectTypeDefinition<NumberSubject, ZodType<numb
 
     return {
       ...generateBaseSubject({ type: 'number', setup }),
+      valueReason: 'Newly created',
       minInput: min?.id,
       maxInput: max?.id,
       engagementInput: engagement?.id

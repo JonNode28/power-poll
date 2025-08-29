@@ -1,24 +1,24 @@
-import { SubjectStatus } from "./SubjectStatus.js";
+import {SubjectStatus} from "../SubjectStatus.js";
 import z from "zod";
-import {createSubjectSchema, isRejected, UnknownSubject} from "./Subject.js";
-import {ZodType} from "zod";
+import {isRejected, UnknownSubject} from "../Subject.js";
 
-export const CriteriaResult = z.object({
+
+export const StatusCriteriaResult = z.object({
   status: SubjectStatus,
   reason: z.string()
 })
 
-export type CriteriaResult = z.infer<typeof CriteriaResult>
+export type StatusCriteriaResult = z.infer<typeof StatusCriteriaResult>
 
 interface StatusCriteriaFn {
-  (): CriteriaResult | Promise<CriteriaResult>
+  (): StatusCriteriaResult | Promise<StatusCriteriaResult>
 }
 interface StatusWithReasonResult {
   status: SubjectStatus
-  reason: CriteriaResult[]
+  reason: StatusCriteriaResult[]
 }
 
-const rejectionCriteria = (subject: UnknownSubject):CriteriaResult => {
+const rejectionCriteria = (subject: UnknownSubject):StatusCriteriaResult => {
   const allVotes = Object.values(subject.votes)
   const rejectionCount = allVotes.filter(vote => isRejected(vote)).length
   const rejectionRate = rejectionCount === 0 ? 0 : rejectionCount / allVotes.length

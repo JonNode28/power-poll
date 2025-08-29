@@ -1,6 +1,6 @@
 import {SubjectTypeDefinition} from "../SubjectTypeDefinition.js";
 import {vote} from "./vote.js";
-import {StructureSubject, StructureSubjectValueReason} from "./StructureSubject.js";
+import {StructureSubject, StructureSubjectValue, StructureSubjectValueReason} from "./StructureSubject.js";
 import {update} from "./update.js";
 import {generateBaseSubject} from "../generateBaseSubject.js";
 import {select} from "@inquirer/prompts";
@@ -9,7 +9,7 @@ import {getSubjects} from "../../../store.js";
 import {selectInput} from "../../selectInput.js";
 import {UnknownSubjectStructure} from "../../SubjectStructure.js";
 
-export const StructureDefinition: SubjectTypeDefinition<StructureSubject, typeof UnknownSubjectStructure, typeof StructureSubjectValueReason> = {
+export const StructureDefinition: SubjectTypeDefinition<StructureSubject, typeof StructureSubjectValue, typeof StructureSubjectValueReason> = {
   id: 'structure',
   name: 'Structure',
   description: 'Consensus around a subject structure',
@@ -33,8 +33,10 @@ export const StructureDefinition: SubjectTypeDefinition<StructureSubject, typeof
 
     return {
       ...generateBaseSubject({type: 'structure', setup}),
+      valueReason: [ 'Newly created' ],
       engagementInput: engagement?.id,
-      value: await structureSubjectType.createStructure()
+      structure: await structureSubjectType.createStructure(),
+      value: true
     }
   },
   vote,

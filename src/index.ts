@@ -122,11 +122,11 @@ async function detail(subject: UnknownSubject){
       },
       new Separator(),
       {
-        name: 'back',
+        name: 'Back',
         value: async () => list(),
       },
       {
-        name: 'exit',
+        name: 'Exit',
         value: () => process.exit(0)
       }
     ],
@@ -155,6 +155,7 @@ async function vote(subject: UnknownSubject, userId: string){
   })
 
   await saveSubject(updatedSubject)
+  console.log(`Finished voting on ${subject.name}`)
   await home()
 }
 

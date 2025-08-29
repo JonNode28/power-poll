@@ -2,10 +2,10 @@ import {getUpdatedInputSubject} from "../../getUpdatedInputSubject.js";
 import {NumberSubject} from "./NumberSubject.js";
 import {PercentSubject} from "../percent/PercentSubject.js";
 import {UpdateFn} from "../SubjectTypeDefinition.js";
-import {getEngagementThresholdMetStatusAndReason} from "../../getEngagementThresholdMetStatusAndReason.js";
-import {generateStatusWithReason} from "../../generateStatusWithReason.js";
 import {isRejected} from "../../Subject.js";
 import {ZodType} from "zod";
+import {generateStatusWithReason} from "../../status/generateStatusWithReason.js";
+import {getEngagementThresholdMetStatusAndReason} from "../../status/getEngagementThresholdMetStatusAndReason.js";
 
 export const update: UpdateFn<NumberSubject, ZodType<number>, ZodType<string>> = async (subject, updatedSubjects) => {
   const minValueSubject = (await getUpdatedInputSubject(subject.minInput, NumberSubject, updatedSubjects))

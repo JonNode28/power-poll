@@ -40,14 +40,14 @@ async function get() {
   if(!consensusThreshold) throw new Error(`A consensus threshold subject is required`)
   data = {
     subjects: [ engagementThreshold, consensusThreshold ],
-    voteConstraints: [],
     users: {}
   }
   return data
 }
 
 async function set(newData: Data) {
-  await fs.writeFile('./src/data.json', JSON.stringify(Data.parse(newData), null, 2))
+  const parsedData = Data.parse(newData)
+  await fs.writeFile('./src/data.json', JSON.stringify(parsedData, null, 2))
   data = newData
 }
 

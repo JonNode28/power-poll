@@ -6,9 +6,11 @@ import {Subject, UnknownSubject} from "../Subject.js";
 import {SubjectTypeDefinition} from "./SubjectTypeDefinition.js";
 import {TextDefinition} from "./text/index.js";
 import {ZodType, ZodUnknown} from "zod";
+import {MapDefinition} from "./map/index.js";
 
 const subjectTypes: Record<string, unknown> = {
   [ListDefinition.id]: ListDefinition,
+  [MapDefinition.id]: MapDefinition,
   [NumberDefinition.id]: NumberDefinition,
   [PercentDefinition.id]: PercentDefinition,
   [StructureDefinition.id]: StructureDefinition,

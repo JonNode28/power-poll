@@ -51,6 +51,7 @@ export const TextDefinition: SubjectTypeDefinition<TextSubject, ZodType<string>,
 
     return {
       ...generateBaseSubject({type: 'text', setup}),
+      valueReason: 'Newly created',
       engagementInput: engagement.id,
       consensusInput: consensus.id,
       structureInput: selectedStructureSubjectId
@@ -72,6 +73,12 @@ export const TextDefinition: SubjectTypeDefinition<TextSubject, ZodType<string>,
     { name: 'Engagement', description: 'The subject used to determine the engagement threshold', subjectId: subject.engagementInput, optional: false },
     { name: 'Consensus', description: 'The subject used to determine the consensus threshold', subjectId: subject.consensusInput, optional: false }
   ]),
+  validate: (subject: TextSubject, structure: TextSubjectStructure) => {
+    if(!subject.value) return { valid: false, reasons: [`Subject has no value`] }
+    if(structure.min && subject.value.length < structure.min) return { valid: false, reasons: [`Value of length ${subject.value.length} is lower than minimum threshold ${structure.min}`] }
+    if(structure.max && subject.value.length > structure.max) return { valid: false, reasons: [`Value of length ${subject.value.length} is higher than maximum threshold ${structure.max}`] }
+    return { valid: true }
+  },
   vote,
   update
 }

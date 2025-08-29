@@ -1,11 +1,12 @@
 import {getUpdatedInputSubject} from "../../getUpdatedInputSubject.js";
-import {TextSubject, TextSubjectVote} from "./TextSubject.js";
+import {TextSubject} from "./TextSubject.js";
 import {PercentSubject} from "../percent/PercentSubject.js";
 import {UpdateFn} from "../SubjectTypeDefinition.js";
-import {getEngagementThresholdMetStatusAndReason} from "../../getEngagementThresholdMetStatusAndReason.js";
-import {generateStatusWithReason} from "../../generateStatusWithReason.js";
 import {isRejected} from "../../Subject.js";
 import {ZodType} from "zod";
+import {getValidationStatusAndReason} from "../../status/getValidationStatusAndReason.js";
+import {generateStatusWithReason} from "../../status/generateStatusWithReason.js";
+import {getEngagementThresholdMetStatusAndReason} from "../../status/getEngagementThresholdMetStatusAndReason.js";
 
 export const update: UpdateFn<TextSubject, ZodType<string>, ZodType<string>> = async (subject, updatedSubjects) => {
   const engagementThresholdSubject = (await getUpdatedInputSubject(subject.engagementInput, PercentSubject, updatedSubjects))
@@ -24,9 +25,17 @@ export const update: UpdateFn<TextSubject, ZodType<string>, ZodType<string>> = a
   const sortedCounts = Object.entries(counts)
     .sort(([, countA], [, countB]) => countB - countA)
   const topKeyCountItem = sortedCounts[0]
+  const value = topKeyCountItem ? topKeyCountItem[0] : undefined
 
-  const { status, reason } = await generateStatusWithReason(subject, [
+  const updatedSubject = {
+    ...subject,
+    value,
+    valueReason: `votes by popularity: ${sortedCounts.map(([ value, count ], i) => `#${i + 1} ${value} (${count})`).join(',')}`,
+  }
+
+  const { status, reason } = await generateStatusWithReason(updatedSubject, [
     () => getEngagementThresholdMetStatusAndReason(allVotes.length, engagementThresholdSubject),
+    () => getValidationStatusAndReason(updatedSubject, updatedSubject.structureInput),
     () => {
       if(!consensusThresholdSubject) return { status: 'active', reason: 'No consensus threshold subject supplied' }
       if(!sortedCounts.length) return { status: 'pending', reason: 'No votes yet' }
@@ -39,11 +48,8 @@ export const update: UpdateFn<TextSubject, ZodType<string>, ZodType<string>> = a
     }
   ])
 
-  return {
-    ...subject,
-    value: topKeyCountItem ? topKeyCountItem[0] : undefined,
-    valueReason: `votes by popularity: ${sortedCounts.map(([ value, count ], i) => `#${i + 1} ${value} (${count})`).join(',')}`,
-    status: status,
-    statusReason: reason
-  }
+  updatedSubject.status = status
+  updatedSubject.statusReason = reason
+
+  return updatedSubject
 }

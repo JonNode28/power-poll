@@ -1,6 +1,6 @@
 import {z, ZodType} from "zod";
-import {CriteriaResult} from "./generateStatusWithReason.js";
 import {SubjectStatus} from "./SubjectStatus.js";
+import {StatusCriteriaResult} from "./status/generateStatusWithReason.js";
 
 export const createValueVoteSchema = <V extends ZodType>(valueSchema: V) => {
  return z.object({
@@ -32,7 +32,7 @@ export const createSubjectSchema = <V extends ZodType, VR extends ZodType>(value
     type: id ? z.literal(id) : z.string(),
     author: z.string(),
     status: SubjectStatus,
-    statusReason: CriteriaResult.array(),
+    statusReason: StatusCriteriaResult.array(),
     valueUpdatedTimestamp: z.iso.datetime().optional(),
     value: valueSchema.optional(),
     valueReason: valueReasonSchema,
@@ -52,7 +52,9 @@ export const createSubjectSchema = <V extends ZodType, VR extends ZodType>(value
   })
 }
 
-export const UnknownSubject = createSubjectSchema(z.any(), z.any())
+export const UnknownSubject = z.looseObject({
+  ...createSubjectSchema(z.any(), z.any()).shape
+})
 export type UnknownSubject = z.infer<typeof UnknownSubject>
 
 export type SubjectSchema<V extends ZodType, VR extends ZodType> = ReturnType<typeof createSubjectSchema<V, VR>>
