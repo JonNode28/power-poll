@@ -28,7 +28,7 @@ export const MapDefinition: SubjectTypeDefinition<MapSubject, typeof MapSubjectV
     if (!consensus) return
 
     const mapSubjectStructures = allSubjects.filter(subject =>
-      subject.type === 'structure' && StructureSubject.parse(subject).value?.type === 'list')
+      subject.type === 'structure' && StructureSubject.parse(subject).structure?.type === 'list')
     const structure = await selectInput('Structure', true, mapSubjectStructures)
 
     return {
@@ -51,7 +51,7 @@ export const MapDefinition: SubjectTypeDefinition<MapSubject, typeof MapSubjectV
               && subject.value)
             .map(subject => ({
               name: subject.name,
-              value: subject.value!
+              value: subject.structure!
             })),
           new Separator(),
           {
