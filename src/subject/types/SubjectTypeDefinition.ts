@@ -1,4 +1,4 @@
-import {z, ZodUnknown} from "zod";
+import {z} from "zod";
 import {Subject, UnknownSubject} from "../Subject.js";
 import {ZodType} from "zod";
 import {UnknownSubjectStructure} from "../SubjectStructure.js";
@@ -20,19 +20,31 @@ export const Input = z.object({
 
 export type Input = z.infer<typeof Input>
 
-export interface SubjectTypeDefinition<
-  S extends Subject<V, VR>,
-  V extends ZodType,
-  VR extends ZodType
-> {
+export interface CreateSubjectFn<S extends Subject<V, VR>, V extends ZodType, VR extends ZodType> {
+  (setup: Partial<S>): Promise<S | undefined>
+}
+
+export interface CreateSubjectStructureFn {
+  (): UnknownSubjectStructure | Promise<UnknownSubjectStructure>
+}
+
+export interface GetInputsFn<S extends Subject<V, VR>, V extends ZodType, VR extends ZodType> {
+  (subject: S): Input[]
+}
+
+export interface ValidateFn<S extends Subject<V, VR>, V extends ZodType, VR extends ZodType> {
+  (subject: S, structure: UnknownSubjectStructure): { valid: boolean, reasons?: string[] }
+}
+
+export interface SubjectTypeDefinition<S extends Subject<V, VR>, V extends ZodType, VR extends ZodType> {
   id: string
   name: string
   description: string
   subjectSchema: z.infer<S>
-  getInputs?: (subject: S) => Input[]
-  createSubject: (setup: Partial<S>) => Promise<S | undefined>
-  createStructure?: () => UnknownSubjectStructure | Promise<UnknownSubjectStructure>
-  validate?: (subject: S, structure: UnknownSubjectStructure) => { valid: boolean, reasons?: string[] }
+  getInputs?: GetInputsFn<S, V, VR>
+  createSubject: CreateSubjectFn<S, V, VR>
+  createStructure?: CreateSubjectStructureFn
+  validate?: ValidateFn<S, V, VR>
   vote: VoteFn<S, V, VR>
   update: UpdateFn<S, V, VR>
 }

@@ -5,6 +5,7 @@ import {UpdateFn} from "../SubjectTypeDefinition.js";
 import {isRejected} from "../../Subject.js";
 import {generateStatusWithReason} from "../../status/generateStatusWithReason.js";
 import {getEngagementThresholdMetStatusAndReason} from "../../status/getEngagementThresholdMetStatusAndReason.js";
+import {getValidationStatusAndReason} from "../../status/getValidationStatusAndReason.js";
 
 interface CountItem {
   subjectId: string,
@@ -52,11 +53,7 @@ export const update: UpdateFn<ListSubject, typeof ListSubjectValue, typeof ListS
     return a
   }, { consensusItems: [], dissentItems: [] })
 
-  const { status, reason } = await generateStatusWithReason(subject, [
-    () => getEngagementThresholdMetStatusAndReason(allVotes.length, engagementThresholdSubject)
-  ])
-
-  return {
+  const updatedSubject = {
     ...subject,
     value: consensusItems.map(item => item.subjectId),
     valueReason: [
@@ -65,7 +62,15 @@ export const update: UpdateFn<ListSubject, typeof ListSubjectValue, typeof ListS
       `${dissentItems.length} choices didn't make it`,
       ...renderItemCounts(dissentItems, allVotes.length)
     ],
-    status: status,
-    statusReason: reason
   }
+
+  const { status, reason } = await generateStatusWithReason(subject, [
+    () => getEngagementThresholdMetStatusAndReason(allVotes.length, engagementThresholdSubject),
+    () => getValidationStatusAndReason(updatedSubject, updatedSubject.structureInput),
+  ])
+
+  updatedSubject.status = status
+  updatedSubject.statusReason = reason
+
+  return updatedSubject
 }

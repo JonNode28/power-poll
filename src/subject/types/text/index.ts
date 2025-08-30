@@ -11,74 +11,20 @@ import {StructureSubject} from "../structure/StructureSubject.js";
 import {select, Separator} from "@inquirer/prompts";
 import {TextSubjectStructure} from "./TextSubjectStructure.js";
 import {number} from "@inquirer/prompts";
+import {createSubject} from "./createSubject.js";
+import {createStructure} from "./createStructure.js";
+import {getInputs} from "./getInputs.js";
+import {validate} from "./validate.js";
 
 export const TextDefinition: SubjectTypeDefinition<TextSubject, ZodType<string>, ZodType<string>> = {
   id: 'text',
   name: 'Text',
   description: 'Establishes consensus around a piece of text',
   subjectSchema: TextSubject,
-  createSubject: async (setup) => {
-    const allSubjects = await getSubjects()
-    const percentSubjects = allSubjects.filter(subject => subject.type === 'percent')
-
-    const engagement = await selectInput('Engagement', false, percentSubjects)
-    if(!engagement) return
-
-    const consensus = await selectInput('Consensus', false, percentSubjects)
-    if(!consensus) return
-
-    let selectedStructureSubjectId: string | undefined
-    if(await confirm({ message: 'Apply structure?' })){
-      const availableStructureSubjects: StructureSubject[] = allSubjects
-        .filter((subject): subject is StructureSubject  =>
-          subject.type === 'structure'
-          && subject.value)
-      selectedStructureSubjectId = await select({
-        message: 'Select a structure to apply',
-        choices: [
-          ...availableStructureSubjects.map(subject => ({
-            name: subject.name,
-            value: subject.id
-          })),
-          new Separator(),
-          {
-            name: 'Cancel',
-            value: undefined
-          }
-        ]
-      })
-    }
-
-    return {
-      ...generateBaseSubject({type: 'text', setup}),
-      valueReason: 'Newly created',
-      engagementInput: engagement.id,
-      consensusInput: consensus.id,
-      structureInput: selectedStructureSubjectId
-    }
-  },
-  createStructure: async () => {
-    const textStructure: TextSubjectStructure = { type: 'text' }
-    if (await confirm({ message: 'Set a minimum text length?' })) {
-      const min = await number({message: 'Enter the minimum text length'})
-      if (min !== undefined) textStructure.min = min
-    }
-    if (await confirm({message: 'Set a maximum text length?'})) {
-      const max = await number({message: 'Enter the maximum text length'})
-      if (max !== undefined) textStructure.max = max
-    }
-    return textStructure
-  },
-  getInputs: (subject: TextSubject) => ([
-    { name: 'Engagement', description: 'The subject used to determine the engagement threshold', subjectId: subject.engagementInput, optional: false },
-    { name: 'Consensus', description: 'The subject used to determine the consensus threshold', subjectId: subject.consensusInput, optional: false }
-  ]),
-  validate: (subject: TextSubject, structure: TextSubjectStructure) => {
-    if(!subject.value) return { valid: false, reasons: [`Subject has no value`] }
-    if(structure.min && subject.value.length < structure.min) return { valid: false, reasons: [`Value of length ${subject.value.length} is lower than minimum threshold ${structure.min}`] }
-    if(structure.max && subject.value.length > structure.max) return { valid: false, reasons: [`Value of length ${subject.value.length} is higher than maximum threshold ${structure.max}`] }
-    return { valid: true }
-  },
+  createSubject,
+  createStructure,
+  getInputs,
+  validate,
   vote,
   update
 }

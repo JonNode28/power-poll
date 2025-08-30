@@ -1,14 +1,13 @@
 import {createSubjectSchema, Subject} from "../../Subject.js";
 import z from "zod";
 
-export const TextSubjectVote = z.looseObject({
-  timestamp: z.iso.datetime(),
-  value: z.string()
-})
+export const TextSubjectValue = z.string()
+export type TextSubjectValue = z.infer<typeof TextSubjectValue>
 
-export type TextSubjectVote = z.infer<typeof TextSubjectVote>
+export const TextSubjectValueReason = z.string()
+export type TextSubjectValueReason = z.infer<typeof TextSubjectValueReason>
 
-export const TextSubject = createSubjectSchema(z.string(), z.string(), 'text').extend({
+export const TextSubject = createSubjectSchema(TextSubjectValue, TextSubjectValueReason, 'text').extend({
   engagementInput: z.string(),
   consensusInput: z.string(),
   structureInput: z.string().optional(),
