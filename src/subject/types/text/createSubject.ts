@@ -2,9 +2,8 @@ import {CreateSubjectFn} from "../SubjectTypeDefinition.js";
 import {TextSubject, TextSubjectValue, TextSubjectValueReason} from "./TextSubject.js";
 import {getSubjects} from "../../../store.js";
 import {selectInput} from "../../selectInput.js";
-import {confirm, select, Separator} from "@inquirer/prompts";
-import {StructureSubject} from "../structure/StructureSubject.js";
 import {generateBaseSubject} from "../generateBaseSubject.js";
+import {getStructureSubjects} from "../getStructureSubjects.js";
 
 export const createSubject: CreateSubjectFn<TextSubject, typeof TextSubjectValue, typeof TextSubjectValueReason> = async (setup) => {
   const allSubjects = await getSubjects()
@@ -16,11 +15,7 @@ export const createSubject: CreateSubjectFn<TextSubject, typeof TextSubjectValue
   const consensus = await selectInput('Consensus', false, percentSubjects)
   if(!consensus) return
 
-  const availableStructureSubjects: StructureSubject[] = allSubjects
-    .filter((subject): subject is StructureSubject  =>
-      subject.type === 'structure'
-      && subject.value)
-  const structure = await selectInput('Structure', true, availableStructureSubjects)
+  const structure = await selectInput('Structure', true, await getStructureSubjects('text'))
 
   return {
     ...generateBaseSubject({type: 'text', setup}),
