@@ -16,33 +16,17 @@ export const createSubject: CreateSubjectFn<TextSubject, typeof TextSubjectValue
   const consensus = await selectInput('Consensus', false, percentSubjects)
   if(!consensus) return
 
-  let selectedStructureSubjectId: string | undefined
-  if(await confirm({ message: 'Applqy structure?' })){
-    const availableStructureSubjects: StructureSubject[] = allSubjects
-      .filter((subject): subject is StructureSubject  =>
-        subject.type === 'structure'
-        && subject.value)
-    selectedStructureSubjectId = await select({
-      message: 'Select a structure to apply',
-      choices: [
-        ...availableStructureSubjects.map(subject => ({
-          name: subject.name,
-          value: subject.id
-        })),
-        new Separator(),
-        {
-          name: 'Cancel',
-          value: undefined
-        }
-      ]
-    })
-  }
+  const availableStructureSubjects: StructureSubject[] = allSubjects
+    .filter((subject): subject is StructureSubject  =>
+      subject.type === 'structure'
+      && subject.value)
+  const structure = await selectInput('Structure', true, availableStructureSubjects)
 
   return {
     ...generateBaseSubject({type: 'text', setup}),
     valueReason: 'Newly created',
     engagementInput: engagement.id,
     consensusInput: consensus.id,
-    structureInput: selectedStructureSubjectId
+    structureInput: structure?.id
   }
 }
