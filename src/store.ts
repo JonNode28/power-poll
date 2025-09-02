@@ -4,6 +4,7 @@ import fs from "fs/promises";
 import {getSubjectType} from "./subject/types/index.js";
 import {User} from "./User.js";
 import {UnknownSubject} from "./subject/Subject.js";
+import {z} from "zod";
 
 let data: Data
 const DATA_PATH = './src/data.json'
@@ -68,6 +69,12 @@ export async function setUser(user: User) {
 
 export async function getSubjects():Promise<UnknownSubject[]> {
   return (await get()).subjects
+}
+
+export async function getSubject<TSubject extends z.ZodType>(subjectId: string | undefined, SubjectSchema: TSubject): Promise<z.infer<TSubject>> {
+  const subject = (await getSubjects()).find(subject => subject.id === subjectId)
+  if(!subject) throw new Error(`Couldn't find subject ${subjectId}`)
+  return SubjectSchema.parse(subject)
 }
 
 export async function saveSubject(subject: UnknownSubject) {
