@@ -1,14 +1,14 @@
-import {getInputSubject} from "../../getInputSubject.js";
 import {input} from "@inquirer/prompts";
 import {NumberSubject} from "./NumberSubject.js";
 import {VoteFn} from "../SubjectTypeDefinition.js";
 import {addValueVote} from "../addVote.js";
 import {ZodType} from "zod";
+import {getSubject} from "../../../store.js";
 
 export const vote: VoteFn<NumberSubject, ZodType<number>, ZodType<string>> = async ({ subject, userId}) => {
 
-  const minInput = await getInputSubject(subject.minInput, NumberSubject)
-  const maxInput = await getInputSubject(subject.maxInput, NumberSubject)
+  const minInput = await getSubject(subject.minInput, NumberSubject)
+  const maxInput = await getSubject(subject.maxInput, NumberSubject)
 
   const voteValue = Number(await input({
     message: `Please enter your number vote for ${subject.name}`,
