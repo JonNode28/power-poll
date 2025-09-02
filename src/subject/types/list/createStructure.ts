@@ -24,26 +24,25 @@ export const createStructure: CreateSubjectStructureFn = async () => {
   })
   if (itemStructureType === 'items') {
     const allSubjects = await getSubjects()
-    let selectedStructure: UnknownSubjectStructure | null
-    const selectedStructures: UnknownSubjectStructure[] = []
+    const selectedStructureSubjectIds: string[] = []
     do {
       const availableStructureSubjects: StructureSubject[] = allSubjects
         .filter((subject): subject is StructureSubject  =>
           subject.type === 'structure'
           && subject.value
-          && !listStructure.items?.some(item => item.id === subject.id))
+          && !listStructure.items?.some(itemSubjectId => itemSubjectId === subject.id))
       if(!availableStructureSubjects.length){
-        console.log(!selectedStructures.length
+        console.log(!selectedStructureSubjectIds.length
           ? 'There are no more structures to select'
           : 'There are no structures to select')
         break;
       }
-      selectedStructure = await select({
+      const selectedStructureSubject = await select({
         message: 'Select a structure to apply',
         choices: [
           ...availableStructureSubjects.map(subject => ({
             name: subject.name,
-            value: subject.structure!
+            value: subject!
           })),
           new Separator(),
           {
@@ -52,10 +51,11 @@ export const createStructure: CreateSubjectStructureFn = async () => {
           }
         ]
       })
-      if(selectedStructure) selectedStructures.push(selectedStructure)
-    } while (selectedStructure)
+      if(!selectedStructureSubject) break;
+      selectedStructureSubjectIds.push(selectedStructureSubject.id)
+    } while (true)
 
-    listStructure.items = selectedStructures
+    listStructure.items = selectedStructureSubjectIds
   }
   return listStructure
 }

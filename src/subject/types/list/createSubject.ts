@@ -1,9 +1,9 @@
 import {generateBaseSubject} from "../generateBaseSubject.js";
 import {getSubjects} from "../../../store.js";
 import {selectInput} from "../../selectInput.js";
-import {StructureSubject} from "../structure/StructureSubject.js";
 import {CreateSubjectFn} from "../SubjectTypeDefinition.js";
 import {ListSubject, ListSubjectValue, ListSubjectValueReason} from "./ListSubject.js";
+import {getStructureSubjects} from "../getStructureSubjects.js";
 
 export const createSubject: CreateSubjectFn<ListSubject, typeof ListSubjectValue, typeof ListSubjectValueReason> = async (setup) => {
   const newSubject = generateBaseSubject({type: 'list', setup})
@@ -17,9 +17,7 @@ export const createSubject: CreateSubjectFn<ListSubject, typeof ListSubjectValue
   const consensus = await selectInput('Consensus', false, percentSubjects)
   if (!consensus) return
 
-  const listSubjectStructures = allSubjects.filter(subject =>
-    subject.type === 'structure' && StructureSubject.parse(subject).structure?.type === 'list')
-  const structure = await selectInput('Structure', true, listSubjectStructures)
+  const structure = await selectInput('Structure', true, await getStructureSubjects('list'))
 
   return {
     ...newSubject,
