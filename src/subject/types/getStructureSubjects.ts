@@ -7,5 +7,5 @@ export const getStructureSubjects = async (type: string, allSubjects?: UnknownSu
   return allSubjects
     .filter((subject): subject is StructureSubject  =>
       subject.type === 'structure')
-    .filter(structureSubject => structureSubject.structure?.type === 'text')
+    .filter(structureSubject => structureSubject.structure?.type === type)
 }
