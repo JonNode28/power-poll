@@ -9,9 +9,9 @@ import {ListSubjectStructure} from "./ListSubjectStructure.js";
 
 export const vote: VoteFn<ListSubject, typeof ListSubjectValue, typeof ListSubjectValueReason> = async ({ subject, userId}) => {
 
-  const selectedSubjectIds: string[] = []
+
   let suitableSubjects = await getSubjects()
-  if (subject.structureInput){
+  if (subject.structureInput) {
     const listStructureSubject = await getSubject(subject.structureInput, StructureSubject)
     if (listStructureSubject?.structure) {
       const listStructure = ListSubjectStructure.parse(listStructureSubject.structure)
@@ -25,12 +25,14 @@ export const vote: VoteFn<ListSubject, typeof ListSubjectValue, typeof ListSubje
       }
     }
   }
+
   if(!suitableSubjects.length){
     console.log('There are no suitable options for this list')
   }
+  const selectedSubjectIds: string[] = []
   while (selectedSubjectIds.length !== suitableSubjects.length) {
     const voteValue = await select({
-      message: `Please enter your text vote for ${subject.name}`,
+      message: `Please select the #${selectedSubjectIds.length + 1} subject for ${subject.name}`,
       choices:
         [
           ...suitableSubjects
