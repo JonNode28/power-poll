@@ -36,7 +36,7 @@ async function home(){
     message: 'What would you like to do',
     choices: [
       {
-        name: 'List Subjects',
+        name: 'Vote',
         value: async () => await list()
       },
       {
@@ -72,26 +72,26 @@ async function home(){
 
 async function list(){
   console.clear()
-  let subject: Subject<ZodType, ZodType> | undefined = await select({
+  let result = await select({
     message: 'Select a subject',
     choices: [
       ...(await getSubjects()).map(subject => ({
         name: subject.name,
-        value: subject,
+        value: async () => detail(subject),
       })),
       new Separator(),
       {
-        name: 'Start new subject',
-        value: undefined,
+        name: 'Back',
+        value: async () => home(),
       },
+      {
+        name: 'Exit',
+        value: async () => process.exit(0)
+      }
     ],
   });
 
-  if(!subject){
-    await detail(await create())
-  } else {
-    await detail(subject)
-  }
+  await result()
 
 
 }

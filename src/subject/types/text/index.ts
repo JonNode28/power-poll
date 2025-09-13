@@ -21,10 +21,10 @@ export const TextDefinition: SubjectTypeDefinition<TextSubject, ZodType<string>,
   name: 'Text',
   description: 'Establishes consensus around a piece of text',
   subjectSchema: TextSubject,
-  createSubject,
   createStructure,
+  createSubject,
   getInputs,
+  update,
   validate,
   vote,
-  update
 }

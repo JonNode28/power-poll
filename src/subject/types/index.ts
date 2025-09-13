@@ -24,6 +24,7 @@ export const getSubjectType = <S extends Subject<V, VR>, V extends ZodType, VR e
 
 export const getSubjectTypeBySubject = <S extends Subject<V, VR>, V extends ZodType, VR extends ZodType>(subject: S): SubjectTypeDefinition<S, V, VR> => {
   const subjectType = subjectTypes[subject.type]
+  if(!subjectType) throw new Error(`Couldn't find subject definition for ${JSON.stringify(subject)}`)
   return subjectType as SubjectTypeDefinition<S, V, VR>
 }
 

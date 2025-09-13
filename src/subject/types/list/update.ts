@@ -6,6 +6,10 @@ import {isRejected} from "../../Subject.js";
 import {generateStatusWithReason} from "../../status/generateStatusWithReason.js";
 import {getEngagementThresholdMetStatusAndReason} from "../../status/getEngagementThresholdMetStatusAndReason.js";
 import {getValidationStatusAndReason} from "../../status/getValidationStatusAndReason.js";
+import {StructureSubject} from "../structure/StructureSubject.js";
+import {getSubject} from "../../../store.js";
+import {getItemStructures} from "./utility/getItemStructures.js";
+import {filterValidSubjectIds} from "./utility/filter.js";
 
 interface CountItem {
   subjectId: string,
@@ -21,10 +25,18 @@ export const update: UpdateFn<ListSubject, typeof ListSubjectValue, typeof ListS
   const engagementThresholdSubject = (await getUpdatedInputSubject(subject.engagementInput, PercentSubject, updatedSubjects))
   const consensusThresholdSubject = (await getUpdatedInputSubject(subject.consensusInput, PercentSubject, updatedSubjects))
 
+  const structureSubject = await getSubject(subject.structureInput, StructureSubject)
+  const itemStructures = await getItemStructures(structureSubject.structure)
+
   const allVotes = Object.values(subject.votes)
-  const counts = allVotes.reduce<Record<string, { votes: number, score: number}>>((a, c) => {
+  type CountReduce = Promise<Record<string, { votes: number, score: number}>>
+  const counts = await allVotes.reduce<CountReduce>(async (aPromise, c) => {
+    const a = await aPromise
     if(isRejected(c)) return a
-    c.value.forEach((subjectId, i) => {
+
+    const validVotes = await filterValidSubjectIds(c.value, itemStructures)
+
+    validVotes.forEach((subjectId, i) => {
       const count = a[subjectId]
       if(!count) a[subjectId] = {
         votes: 1, score: i
@@ -35,7 +47,7 @@ export const update: UpdateFn<ListSubject, typeof ListSubjectValue, typeof ListS
       }
     })
     return a
-  },{})
+  }, Promise.resolve({}))
 
   const consensusVotesThreshold = consensusThresholdSubject?.value ? allVotes.length * (consensusThresholdSubject.value / 100) : 0;
 

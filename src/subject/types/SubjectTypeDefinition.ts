@@ -32,8 +32,10 @@ export interface GetInputsFn<S extends Subject<V, VR>, V extends ZodType, VR ext
   (subject: S): Input[]
 }
 
+export interface ValidationResult { valid: boolean, reasons?: string[] }
+
 export interface ValidateFn<S extends Subject<V, VR>, V extends ZodType, VR extends ZodType> {
-  (subject: S, structure: UnknownSubjectStructure): { valid: boolean, reasons?: string[] }
+  (subject: S, structure: UnknownSubjectStructure): ValidationResult | Promise<ValidationResult>
 }
 
 export interface SubjectTypeDefinition<S extends Subject<V, VR>, V extends ZodType, VR extends ZodType> {
@@ -44,6 +46,14 @@ export interface SubjectTypeDefinition<S extends Subject<V, VR>, V extends ZodTy
   getInputs?: GetInputsFn<S, V, VR>
   createSubject: CreateSubjectFn<S, V, VR>
   createStructure?: CreateSubjectStructureFn
+  /**
+   * This function determines if a subject is valid. It's up to the subject type to decide what this means.
+   *
+   * For example a list subject may decide that invalid items are excluded but don't make the list invalid.
+   * It may also determine that a number of valid items lower than the defined `min` threshold does make the list invalid
+   *
+   * Invalid subjects will have a status of 'Pending' while we wait for them to become valid
+   */
   validate?: ValidateFn<S, V, VR>
   vote: VoteFn<S, V, VR>
   update: UpdateFn<S, V, VR>

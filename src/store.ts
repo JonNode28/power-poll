@@ -67,8 +67,10 @@ export async function setUser(user: User) {
   })
 }
 
-export async function getSubjects():Promise<UnknownSubject[]> {
-  return (await get()).subjects
+export async function getSubjects(subjectIds?: string[]):Promise<UnknownSubject[]> {
+  const subjects = (await get()).subjects
+  if(!subjectIds) return subjects
+  return subjects.filter(subject => subjectIds.includes(subject.id))
 }
 
 export async function getSubject<TSubject extends z.ZodType>(subjectId: string | undefined, SubjectSchema: TSubject): Promise<z.infer<TSubject>> {

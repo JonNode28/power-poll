@@ -64,3 +64,7 @@ export type Subject<V extends ZodType, VR extends ZodType> = z.infer<SubjectSche
 export function isRejected<V extends ZodType>(vote: ValueVote<V> | RejectedVote): vote is RejectedVote {
   return 'rejected' in vote;
 }
+
+export function isValueVote<V extends ZodType>(vote: ValueVote<V> | RejectedVote): vote is ValueVote<V> {
+  return !('rejected' in vote);
+}

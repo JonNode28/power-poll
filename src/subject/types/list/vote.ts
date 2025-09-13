@@ -2,29 +2,11 @@ import {ListSubject, ListSubjectValue, ListSubjectValueReason} from "./ListSubje
 import {VoteFn} from "../SubjectTypeDefinition.js";
 import {addValueVote} from "../addVote.js";
 import {select, Separator} from "@inquirer/prompts";
-import {getSubject, getSubjects} from "../../../store.js";
-import {StructureSubject} from "../structure/StructureSubject.js";
-import {validateSubjectStructure} from "../../validateSubjectStructure.js";
-import {ListSubjectStructure} from "./ListSubjectStructure.js";
+import {getSubjects} from "../../../store.js";
+import {filterValidSubjectsByStructureId} from "./utility/filter.js";
 
 export const vote: VoteFn<ListSubject, typeof ListSubjectValue, typeof ListSubjectValueReason> = async ({ subject, userId}) => {
-
-
-  let suitableSubjects = await getSubjects()
-  if (subject.structureInput) {
-    const listStructureSubject = await getSubject(subject.structureInput, StructureSubject)
-    if (listStructureSubject?.structure) {
-      const listStructure = ListSubjectStructure.parse(listStructureSubject.structure)
-      if (listStructure.items) {
-        const itemStructureSubjects = await Promise.all(listStructure.items.map(listItemStructureSubjectId => getSubject(listItemStructureSubjectId, StructureSubject)))
-        suitableSubjects = suitableSubjects
-          .filter(subject => itemStructureSubjects
-            .some((itemStructureSubject) =>
-              itemStructureSubject.structure
-              && validateSubjectStructure(subject, itemStructureSubject.structure).valid))
-      }
-    }
-  }
+  let suitableSubjects = await  filterValidSubjectsByStructureId(await getSubjects(), subject.structureInput)
 
   if(!suitableSubjects.length){
     console.log('There are no suitable options for this list')
