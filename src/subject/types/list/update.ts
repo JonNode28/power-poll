@@ -1,15 +1,16 @@
-import {getUpdatedInputSubject} from "../../getUpdatedInputSubject.js";
+import {getUpdatedSubject} from "../../getUpdatedSubject.js";
 import {ListSubject, ListSubjectValue, ListSubjectValueReason} from "./ListSubject.js";
 import {PercentSubject} from "../percent/PercentSubject.js";
 import {UpdateFn} from "../SubjectTypeDefinition.js";
-import {isRejected} from "../../Subject.js";
+import {isRejected, UnknownSubject} from "../../Subject.js";
 import {generateStatusWithReason} from "../../status/generateStatusWithReason.js";
 import {getEngagementThresholdMetStatusAndReason} from "../../status/getEngagementThresholdMetStatusAndReason.js";
 import {getValidationStatusAndReason} from "../../status/getValidationStatusAndReason.js";
 import {StructureSubject} from "../structure/StructureSubject.js";
 import {getSubject} from "../../../store.js";
 import {getItemStructures} from "./utility/getItemStructures.js";
-import {filterValidSubjectIds} from "./utility/filter.js";
+import {filterValidSubjectIds, filterValidSubjects} from "./utility/filter.js";
+import {getUpdatedSubjects} from "../../getUpdatedSubjects.js";
 
 interface CountItem {
   subjectId: string,
@@ -22,23 +23,28 @@ interface CountItem {
 const renderItemCounts = (items: CountItem[], totalVoteCount: number) => items.map((item, i) => `#${i + 1} ${item.subjectId} (consensus: ${Math.round((item.count.votes / totalVoteCount) * 100)}%, score: ${item.count.score})`)
 
 export const update: UpdateFn<ListSubject, typeof ListSubjectValue, typeof ListSubjectValueReason> = async (subject, updatedSubjects) => {
-  const engagementThresholdSubject = (await getUpdatedInputSubject(subject.engagementInput, PercentSubject, updatedSubjects))
-  const consensusThresholdSubject = (await getUpdatedInputSubject(subject.consensusInput, PercentSubject, updatedSubjects))
+  const engagementThresholdSubject = (await getUpdatedSubject(subject.engagementInput, PercentSubject, updatedSubjects))
+  const consensusThresholdSubject = (await getUpdatedSubject(subject.consensusInput, PercentSubject, updatedSubjects))
 
   const structureSubject = await getSubject(subject.structureInput, StructureSubject)
   const itemStructures = await getItemStructures(structureSubject.structure)
 
   const allVotes = Object.values(subject.votes)
   type CountReduce = Promise<Record<string, { votes: number, score: number}>>
+
+  // Prevent the same subject being updated more than once
+  const updatedSubjectsCache: Record<string, UnknownSubject> = {}
+
   const counts = await allVotes.reduce<CountReduce>(async (aPromise, c) => {
     const a = await aPromise
     if(isRejected(c)) return a
+    // It's important to operate on up-to-date subjects when working out item validity
+    const updatedSubjects = await getUpdatedSubjects(c.value, updatedSubjectsCache)
+    const validVoteSubjects = await filterValidSubjects(updatedSubjects, itemStructures)
 
-    const validVotes = await filterValidSubjectIds(c.value, itemStructures)
-
-    validVotes.forEach((subjectId, i) => {
-      const count = a[subjectId]
-      if(!count) a[subjectId] = {
+    validVoteSubjects.forEach((subject, i) => {
+      const count = a[subject.id]
+      if(!count) a[subject.id] = {
         votes: 1, score: i
       }
       else {
