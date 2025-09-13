@@ -1,14 +1,14 @@
-import {Subject} from "./Subject.js";
+import {Subject, UnknownSubject} from "./Subject.js";
 import {ZodType} from "zod";
-import {getSubjects} from "../store.js";
+import {getSubject, getSubjects} from "../store.js";
 import {getSubjectType} from "./types/index.js";
+import {getUpdatedSubject} from "./getUpdatedSubject.js";
 
-export const getUpdatedSubjects = async () => {
-  const subjects = await getSubjects()
-  const updatedSubjects: Record<string, Subject<ZodType, ZodType>> = {}
-  for(const subject of subjects){
-    const subjectType = getSubjectType(subject.type)
-    updatedSubjects[subject.id] = await subjectType.update(subject, updatedSubjects)
-  }
-  return Object.values(updatedSubjects)
+export const getUpdatedSubjects = async (
+  subjectIds?: string[],
+  updatedSubjects?: Record<string, UnknownSubject>
+) => {
+  if(!subjectIds) subjectIds = (await getSubjects(subjectIds)).map(subject => subject.id)
+  if(!updatedSubjects) updatedSubjects = {}
+  return Promise.all(subjectIds.map(subjectId => getUpdatedSubject(subjectId, UnknownSubject, updatedSubjects)))
 }
