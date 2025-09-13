@@ -1,4 +1,4 @@
-import {getUpdatedInputSubject} from "../../getUpdatedInputSubject.js";
+import {getUpdatedSubject} from "../../getUpdatedSubject.js";
 import {NumberSubject} from "./NumberSubject.js";
 import {PercentSubject} from "../percent/PercentSubject.js";
 import {UpdateFn} from "../SubjectTypeDefinition.js";
@@ -8,9 +8,9 @@ import {generateStatusWithReason} from "../../status/generateStatusWithReason.js
 import {getEngagementThresholdMetStatusAndReason} from "../../status/getEngagementThresholdMetStatusAndReason.js";
 
 export const update: UpdateFn<NumberSubject, ZodType<number>, ZodType<string>> = async (subject, updatedSubjects) => {
-  const minValueSubject = (await getUpdatedInputSubject(subject.minInput, NumberSubject, updatedSubjects))
-  const maxValueSubject = (await getUpdatedInputSubject(subject.maxInput, NumberSubject, updatedSubjects))
-  const engagementThresholdSubject = (await getUpdatedInputSubject(subject.engagementInput, PercentSubject, updatedSubjects))
+  const minValueSubject = (await getUpdatedSubject(subject.minInput, NumberSubject, updatedSubjects))
+  const maxValueSubject = (await getUpdatedSubject(subject.maxInput, NumberSubject, updatedSubjects))
+  const engagementThresholdSubject = (await getUpdatedSubject(subject.engagementInput, PercentSubject, updatedSubjects))
 
   const allVotes = Object.values(subject.votes)
   const newTotal = allVotes.reduce((runningTotal, vote) => {
