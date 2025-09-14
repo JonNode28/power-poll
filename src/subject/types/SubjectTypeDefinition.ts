@@ -8,8 +8,16 @@ export interface SubjectVoterProps<S> {
   userId: string
 }
 
-export type VoteFn<S extends Subject<V, VR>, V extends ZodType, VR extends ZodType> = ({ subject, userId }: SubjectVoterProps<S>) => Promise<S> | S
-export type UpdateFn<S extends Subject<V, VR>, V extends ZodType, VR extends ZodType> = (subject: S, updatedSubjects: Record<string, UnknownSubject>) => Promise<S> | S
+export interface VoteFn<S extends Subject<V, VR>, V extends ZodType, VR extends ZodType>{
+  ({ subject, userId }: SubjectVoterProps<S>): Promise<S> | S
+}
+export interface UpdateFn<S extends Subject<V, VR>, V extends ZodType, VR extends ZodType>{
+  (
+    subject: S,
+    updateId: string,
+    dependencyChain: string[]
+  ): Promise<S> | S
+}
 
 export const Input = z.object({
   name: z.string(),

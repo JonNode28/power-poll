@@ -1,4 +1,4 @@
-import {getUpdatedSubject} from "../../getUpdatedSubject.js";
+import {getUpdatedSubject} from "../../utility/getUpdatedSubject.js";
 import {TextSubject} from "./TextSubject.js";
 import {PercentSubject} from "../percent/PercentSubject.js";
 import {UpdateFn} from "../SubjectTypeDefinition.js";
@@ -8,9 +8,13 @@ import {getValidationStatusAndReason} from "../../status/getValidationStatusAndR
 import {generateStatusWithReason} from "../../status/generateStatusWithReason.js";
 import {getEngagementThresholdMetStatusAndReason} from "../../status/getEngagementThresholdMetStatusAndReason.js";
 
-export const update: UpdateFn<TextSubject, ZodType<string>, ZodType<string>> = async (subject, updatedSubjects) => {
-  const engagementThresholdSubject = (await getUpdatedSubject(subject.engagementInput, PercentSubject, updatedSubjects))
-  const consensusThresholdSubject = (await getUpdatedSubject(subject.consensusInput, PercentSubject, updatedSubjects))
+export const update: UpdateFn<TextSubject, ZodType<string>, ZodType<string>> = async (
+  subject,
+  updateId,
+  dependencyChain
+) => {
+  const engagementThresholdSubject = (await getUpdatedSubject(subject.engagementInput, PercentSubject, updateId, dependencyChain))
+  const consensusThresholdSubject = (await getUpdatedSubject(subject.consensusInput, PercentSubject, updateId, dependencyChain))
 
   const allVotes = Object.values(subject.votes)
   const counts = allVotes.reduce<Record<string, number>>((runningTotal, vote) => {

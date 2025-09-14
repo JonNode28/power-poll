@@ -1,4 +1,4 @@
-import {getUpdatedSubject} from "../../getUpdatedSubject.js";
+import {getUpdatedSubject} from "../../utility/getUpdatedSubject.js";
 import {NumberSubject} from "./NumberSubject.js";
 import {PercentSubject} from "../percent/PercentSubject.js";
 import {UpdateFn} from "../SubjectTypeDefinition.js";
@@ -6,11 +6,16 @@ import {isRejected} from "../../Subject.js";
 import {ZodType} from "zod";
 import {generateStatusWithReason} from "../../status/generateStatusWithReason.js";
 import {getEngagementThresholdMetStatusAndReason} from "../../status/getEngagementThresholdMetStatusAndReason.js";
+import {getOptionalUpdatedSubject} from "../../utility/getOptionalUpdatedSubject.js";
 
-export const update: UpdateFn<NumberSubject, ZodType<number>, ZodType<string>> = async (subject, updatedSubjects) => {
-  const minValueSubject = (await getUpdatedSubject(subject.minInput, NumberSubject, updatedSubjects))
-  const maxValueSubject = (await getUpdatedSubject(subject.maxInput, NumberSubject, updatedSubjects))
-  const engagementThresholdSubject = (await getUpdatedSubject(subject.engagementInput, PercentSubject, updatedSubjects))
+export const update: UpdateFn<NumberSubject, ZodType<number>, ZodType<string>> = async (
+  subject,
+  updateId,
+  dependencyChain
+) => {
+  const minValueSubject = (await getOptionalUpdatedSubject(subject.minInput, NumberSubject, updateId, dependencyChain))
+  const maxValueSubject = (await getOptionalUpdatedSubject(subject.maxInput, NumberSubject, updateId, dependencyChain))
+  const engagementThresholdSubject = (await getOptionalUpdatedSubject(subject.engagementInput, PercentSubject, updateId, dependencyChain))
 
   const allVotes = Object.values(subject.votes)
   const newTotal = allVotes.reduce((runningTotal, vote) => {

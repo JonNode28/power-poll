@@ -5,6 +5,7 @@ import {getSubjectType} from "./subject/types/index.js";
 import {User} from "./User.js";
 import {UnknownSubject} from "./subject/Subject.js";
 import {z} from "zod";
+import chalk from "chalk";
 
 let data: Data
 const DATA_PATH = './src/data.json'
@@ -79,7 +80,7 @@ export async function getSubject<TSubject extends z.ZodType>(subjectId: string |
   return SubjectSchema.parse(subject)
 }
 
-export async function saveSubject(subject: UnknownSubject) {
+export async function saveSubject(subject: UnknownSubject, dependencyChain: string[] = []) {
   const newData = {
     ...data,
     subjects: [
@@ -88,6 +89,7 @@ export async function saveSubject(subject: UnknownSubject) {
     ]
   }
   await set(newData)
+  console.log(chalk.gray(`Saved subject ${[ ...dependencyChain, subject.id ].join(' => ')}`))
   return subject
 }
 

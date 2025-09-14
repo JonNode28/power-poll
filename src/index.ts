@@ -3,9 +3,8 @@ import { select, Separator } from '@inquirer/prompts';
 import {createNewSubject} from "./createNewSubject.js";
 import {getSubjectType, getSubjectTypeBySubject} from "./subject/types/index.js";
 import {getSubjects, getUsers, saveSubject, setUser} from "./store.js";
-import {ZodType} from "zod";
-import {getUpdatedSubjects} from "./subject/getUpdatedSubjects.js";
-import {RejectedVote, Subject, UnknownSubject} from "./subject/Subject.js";
+import {getUpdatedSubjects} from "./subject/utility/getUpdatedSubjects.js";
+import {RejectedVote, UnknownSubject} from "./subject/Subject.js";
 
 console.log('Welcome to ✨Power Poll ✨')
 
@@ -33,7 +32,7 @@ async function auth(){
 
 async function home(){
   let action = await select({
-    message: 'What would you like to do',
+    message: 'What would you like to do?',
     choices: [
       {
         name: 'Vote',
@@ -55,9 +54,6 @@ async function home(){
             ...updatedSubject,
             statusReason: updatedSubject.statusReason.map(statusReason => `${statusReason.status} - ${statusReason.reason}`)
           })), TABLE_HEADERS)
-          for(const updatedSubject of updatedSubjects){
-            await saveSubject(updatedSubject)
-          }
           await home()
         }
       },

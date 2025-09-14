@@ -1,4 +1,4 @@
-import {getUpdatedSubject} from "../../getUpdatedSubject.js";
+import {getUpdatedSubject} from "../../utility/getUpdatedSubject.js";
 import {MapSubject, MapSubjectValue, MapSubjectValueReason} from "./MapSubject.js";
 import {PercentSubject} from "../percent/PercentSubject.js";
 import {UpdateFn} from "../SubjectTypeDefinition.js";
@@ -16,9 +16,13 @@ interface CountItem {
 
 const renderItemCounts = (items: CountItem[], totalVoteCount: number) => items.map((item, i) => `#${i + 1} ${item.subjectId} (consensus: ${Math.round((item.count.votes / totalVoteCount) * 100)}%, score: ${item.count.score})`)
 
-export const update: UpdateFn<MapSubject, typeof MapSubjectValue, typeof MapSubjectValueReason> = async (subject, updatedSubjects) => {
-  const engagementThresholdSubject = (await getUpdatedSubject(subject.engagementInput, PercentSubject, updatedSubjects))
-  const consensusThresholdSubject = (await getUpdatedSubject(subject.consensusInput, PercentSubject, updatedSubjects))
+export const update: UpdateFn<MapSubject, typeof MapSubjectValue, typeof MapSubjectValueReason> = async (
+  subject,
+  updateId,
+  dependencyChain
+) => {
+  const engagementThresholdSubject = (await getUpdatedSubject(subject.engagementInput, PercentSubject, updateId, dependencyChain))
+  const consensusThresholdSubject = (await getUpdatedSubject(subject.consensusInput, PercentSubject, updateId, dependencyChain))
 
   const allVotes = Object.values(subject.votes)
   const counts = allVotes.reduce<Record<string, Record<string, number>>>((a, c) => {

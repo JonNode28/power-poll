@@ -5,7 +5,7 @@ import {getItemStructures} from "./utility/getItemStructures.js";
 import {filterValidSubjectIds} from "./utility/filter.js";
 
 export const validate: ValidateFn<ListSubject, typeof ListSubjectValue, typeof ListSubjectValueReason> = async (subject: ListSubject, structure: ListSubjectStructure) => {
-  if (!subject.value) return {valid: false, reasons: [`Subject has no value`]}
+  if (!subject.value) return { valid: false, reasons: [`Subject has no value`] }
 
   const validItems = await filterValidSubjectIds(subject.value, await getItemStructures(structure))
 
