@@ -1,6 +1,6 @@
 import {input, select} from "@inquirer/prompts";
 import {getAllSubjectTypes, getSubjectType} from "./subject/types/index.js";
-import {getSubjects, saveSubject} from "./store.js";
+import {getSubjects, setSubject} from "./store.js";
 import {Separator} from "@inquirer/prompts";
 import {UnknownSubject} from "./subject/Subject.js";
 
@@ -83,7 +83,7 @@ export const createNewSubject = async (userId: string, type?: string): Promise<U
     return
   }
 
-  await saveSubject(newSubject)
+  await setSubject(newSubject)
   console.log('Subject created')
 
   return newSubject

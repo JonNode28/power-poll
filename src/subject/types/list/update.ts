@@ -85,7 +85,7 @@ export const update: UpdateFn<ListSubject, typeof ListSubjectValue, typeof ListS
 
   const { status, reason } = await generateStatusWithReason(subject, [
     () => getEngagementThresholdMetStatusAndReason(allVotes.length, engagementThresholdSubject),
-    () => getValidationStatusAndReason(updatedSubject, updatedSubject.structureInput),
+    () => getValidationStatusAndReason(updatedSubject, updatedSubject.structureInput, updateId, dependencyChain),
   ])
 
   updatedSubject.status = status

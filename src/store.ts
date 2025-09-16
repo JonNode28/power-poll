@@ -47,10 +47,9 @@ async function get() {
   return data
 }
 
-async function set(newData: Data) {
-  const parsedData = Data.parse(newData)
-  await fs.writeFile('./src/data.json', JSON.stringify(parsedData, null, 2))
-  data = newData
+export async function save() {
+  await fs.writeFile('./src/data.json', JSON.stringify(data, null, 2))
+  console.log('Saved.')
 }
 
 export async function getUsers() {
@@ -58,14 +57,14 @@ export async function getUsers() {
 }
 
 export async function setUser(user: User) {
-  const data = await get()
-  await set({
-    ...data,
+  const loadedData = await get()
+  data = {
+    ...loadedData,
     users: {
-      ...data.users,
+      ...loadedData.users,
       [user.id]: user
     }
-  })
+  }
 }
 
 export async function getSubjects(subjectIds?: string[]):Promise<UnknownSubject[]> {
@@ -80,16 +79,16 @@ export async function getSubject<TSubject extends z.ZodType>(subjectId: string |
   return SubjectSchema.parse(subject)
 }
 
-export async function saveSubject(subject: UnknownSubject, dependencyChain: string[] = []) {
-  const newData = {
-    ...data,
+export async function setSubject(subject: UnknownSubject, dependencyChain: string[] = []) {
+  const loadedData = await get()
+  data = {
+    ...loadedData,
     subjects: [
-      ...data.subjects.filter(existingSubject => existingSubject.id !== subject.id),
+      ...loadedData.subjects.filter(existingSubject => existingSubject.id !== subject.id),
       subject
     ]
   }
-  await set(newData)
-  console.log(chalk.gray(`Saved subject ${[ ...dependencyChain, subject.id ].join(' => ')}`))
+  console.log(chalk.gray(`Set subject ${[ ...dependencyChain, subject.id ].join(' => ')}`))
   return subject
 }
 
@@ -102,9 +101,5 @@ async function tryLoadData() {
     else throw err
   }
   if (!dataRaw?.length) return
-  try {
-    return JSON.parse(dataRaw.toString())
-  } catch (err) {
-    console.log('Had an issue loading data. It will be overwritten.', dataRaw)
-  }
+  return JSON.parse(dataRaw.toString())
 }

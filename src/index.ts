@@ -2,7 +2,7 @@ import { input } from '@inquirer/prompts';
 import { select, Separator } from '@inquirer/prompts';
 import {createNewSubject} from "./createNewSubject.js";
 import {getSubjectType, getSubjectTypeBySubject} from "./subject/types/index.js";
-import {getSubjects, getUsers, saveSubject, setUser} from "./store.js";
+import {getSubjects, getUsers, save, setSubject, setUser} from "./store.js";
 import {getUpdatedSubjects} from "./subject/utility/getUpdatedSubjects.js";
 import {RejectedVote, UnknownSubject} from "./subject/Subject.js";
 
@@ -36,26 +36,19 @@ async function home(){
     choices: [
       {
         name: 'Vote',
-        value: async () => await list()
+        value: async () => list()
       },
       {
         name: 'Create Subject',
         value: async () => {
           const subject = await createNewSubject(userId)
-          if(subject) await saveSubject(subject)
+          if(subject) await setSubject(subject)
           await home()
         }
       },
       {
         name: 'Update Values',
-        value: async () => {
-          const updatedSubjects = await getUpdatedSubjects()
-          console.table(updatedSubjects.map(updatedSubject => ({
-            ...updatedSubject,
-            statusReason: updatedSubject.statusReason.map(statusReason => `${statusReason.status} - ${statusReason.reason}`)
-          })), TABLE_HEADERS)
-          await home()
-        }
+        value: async () => update()
       },
       {
         name: 'exit',
@@ -88,8 +81,16 @@ async function list(){
   });
 
   await result()
+}
 
-
+async function update(){
+  const updatedSubjects = await getUpdatedSubjects()
+  console.table(updatedSubjects.map(updatedSubject => ({
+    ...updatedSubject,
+    statusReason: updatedSubject.statusReason.map(statusReason => `${statusReason.status} - ${statusReason.reason}`)
+  })), TABLE_HEADERS)
+  await save()
+  await home()
 }
 
 async function detail(subject: UnknownSubject){
@@ -134,7 +135,7 @@ async function create(){
   console.clear()
   const subject = await createNewSubject(userId)
   if(!subject) process.exit(0)
-  await saveSubject(subject)
+  await setSubject(subject)
   console.log(`Now that you've created a new subject, let's vote on it!`)
   return subject
 }
@@ -150,7 +151,7 @@ async function vote(subject: UnknownSubject, userId: string){
     userId
   })
 
-  await saveSubject(updatedSubject)
+  await setSubject(updatedSubject)
   console.log(`Finished voting on ${subject.name}`)
   await home()
 }
@@ -176,7 +177,7 @@ async function reject(subject: UnknownSubject, userId: string){
     ]
   }
 
-  await saveSubject(updatedSubject)
+  await setSubject(updatedSubject)
   console.log(`Rejected ${subject.name}`)
   await home()
 }

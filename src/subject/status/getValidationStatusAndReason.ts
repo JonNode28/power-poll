@@ -3,14 +3,19 @@ import {validateSubjectStructure} from "../validateSubjectStructure.js";
 import {getSubjects} from "../../store.js";
 import {StructureSubject} from "../types/structure/StructureSubject.js";
 import {StatusCriteriaResult} from "./generateStatusWithReason.js";
+import {getUpdatedSubject} from "../utility/getUpdatedSubject.js";
 
-export const getValidationStatusAndReason = async (subject: UnknownSubject, structureSubjectId: string | undefined): Promise<StatusCriteriaResult> => {
+export const getValidationStatusAndReason = async (
+  subject: UnknownSubject,
+  structureSubjectId: string | undefined,
+  updateId: string,
+  dependencyChain: string[]
+): Promise<StatusCriteriaResult> => {
   if (!structureSubjectId) return {
     status: 'active',
     reason: 'No structure to meet'
   }
-  const foundStructureSubject = (await getSubjects()).find(subject => subject.id === structureSubjectId)
-  const structureSubject = StructureSubject.parse(foundStructureSubject)
+  const structureSubject = await getUpdatedSubject(structureSubjectId, StructureSubject, updateId, dependencyChain)
   if (!structureSubject.value) return {
     status: 'pending',
     reason: `Structure subject ${structureSubjectId} doesn't have a value yet`,

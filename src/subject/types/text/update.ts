@@ -39,7 +39,7 @@ export const update: UpdateFn<TextSubject, ZodType<string>, ZodType<string>> = a
 
   const { status, reason } = await generateStatusWithReason(updatedSubject, [
     () => getEngagementThresholdMetStatusAndReason(allVotes.length, engagementThresholdSubject),
-    () => getValidationStatusAndReason(updatedSubject, updatedSubject.structureInput),
+    () => getValidationStatusAndReason(updatedSubject, updatedSubject.structureInput, updateId, dependencyChain),
     () => {
       if(!consensusThresholdSubject) return { status: 'active', reason: 'No consensus threshold subject supplied' }
       if(!sortedCounts.length) return { status: 'pending', reason: 'No votes yet' }

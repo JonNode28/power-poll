@@ -1,7 +1,7 @@
 import {z} from "zod";
 import { SubjectSchema, UnknownSubject} from "../Subject.js";
 import {ZodType} from "zod";
-import {getSubject, saveSubject} from "../../store.js";
+import {getSubject, setSubject} from "../../store.js";
 import {getSubjectType} from "../types/index.js";
 
 const updateCache: Record<string, UnknownSubject> = {}
@@ -22,6 +22,6 @@ export const getUpdatedSubject = async <
   const cacheKey = `${updateId}.${subjectId}`
   if(updateCache[cacheKey]) return SubjectSchema.parse(updateCache[cacheKey])
   updateCache[cacheKey] = updatedSubject
-  await saveSubject(updatedSubject, dependencyChain)
+  await setSubject(updatedSubject, dependencyChain)
   return SubjectSchema.parse(updatedSubject)
 }
