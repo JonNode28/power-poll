@@ -105,6 +105,6 @@ async function tryLoadData() {
   try {
     return JSON.parse(dataRaw.toString())
   } catch (err) {
-    console.log('Had an issue loading data. It will be overwritten.')
+    console.log('Had an issue loading data. It will be overwritten.', dataRaw)
   }
 }
