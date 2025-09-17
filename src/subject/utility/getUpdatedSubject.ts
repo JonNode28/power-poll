@@ -3,6 +3,7 @@ import { SubjectSchema, UnknownSubject} from "../Subject.js";
 import {ZodType} from "zod";
 import {getSubject, setSubject} from "../../store.js";
 import {getSubjectType} from "../types/index.js";
+import chalk from "chalk";
 
 const updateCache: Record<string, UnknownSubject> = {}
 
@@ -20,7 +21,10 @@ export const getUpdatedSubject = async <
   const subjectTypeDefinition = getSubjectType(subject.type)
   const updatedSubject = await subjectTypeDefinition.update(subject, updateId, [ ...dependencyChain, subjectId ])
   const cacheKey = `${updateId}.${subjectId}`
-  if(updateCache[cacheKey]) return SubjectSchema.parse(updateCache[cacheKey])
+  if(updateCache[cacheKey]){
+    console.log(chalk.gray(`Cache hit for ${subjectId} ${dependencyChain.length ? `at dependency: ${dependencyChain.join(' => ')}` : ''}`))
+    return SubjectSchema.parse(updateCache[cacheKey])
+  }
   updateCache[cacheKey] = updatedSubject
   await setSubject(updatedSubject, dependencyChain)
   return SubjectSchema.parse(updatedSubject)
