@@ -1,6 +1,6 @@
 import z from "zod";
 
-export const UnknownSubjectStructure = z.looseObject({
+export const UnknownSubjectStructureSchema = z.looseObject({
   type: z.string()
 })
-export type UnknownSubjectStructure = z.infer<typeof UnknownSubjectStructure>
+export type UnknownSubjectStructure = z.infer<typeof UnknownSubjectStructureSchema>

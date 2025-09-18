@@ -3,7 +3,7 @@ import {StructureSubject, StructureSubjectValue, StructureSubjectValueReason} fr
 import {PercentSubject} from "../percent/PercentSubject.js";
 import {UpdateFn} from "../SubjectTypeDefinition.js";
 import {isRejected} from "../../Subject.js";
-import {UnknownSubjectStructure} from "../../SubjectStructure.js";
+import {UnknownSubjectStructureSchema} from "../../SubjectStructure.js";
 import {generateStatusWithReason} from "../../status/generateStatusWithReason.js";
 import {getEngagementThresholdMetStatusAndReason} from "../../status/getEngagementThresholdMetStatusAndReason.js";
 import {getOptionalUpdatedSubject} from "../../utility/getOptionalUpdatedSubject.js";

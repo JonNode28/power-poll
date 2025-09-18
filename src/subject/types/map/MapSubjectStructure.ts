@@ -1,7 +1,7 @@
 import z from "zod";
-import {UnknownSubjectStructure} from "../../SubjectStructure.js";
+import {UnknownSubjectStructureSchema} from "../../SubjectStructure.js";
 
-export const MapSubjectStructure = UnknownSubjectStructure.extend({
-  properties: z.record(z.string(), UnknownSubjectStructure).optional()
+export const MapSubjectStructure = UnknownSubjectStructureSchema.extend({
+  properties: z.record(z.string(), UnknownSubjectStructureSchema).optional()
 })
 export type MapSubjectStructure = z.infer<typeof MapSubjectStructure>

@@ -1,7 +1,7 @@
 import {ListSubjectStructure} from "./ListSubjectStructure.js";
 import {confirm, number, select, Separator} from "@inquirer/prompts";
 import {getSubjects} from "../../../store.js";
-import {UnknownSubjectStructure} from "../../SubjectStructure.js";
+import {UnknownSubjectStructureSchema} from "../../SubjectStructure.js";
 import {StructureSubject} from "../structure/StructureSubject.js";
 import {CreateSubjectStructureFn} from "../SubjectTypeDefinition.js";
 

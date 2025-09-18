@@ -1,7 +1,7 @@
 import z from "zod";
-import {UnknownSubjectStructure} from "../../SubjectStructure.js";
+import {UnknownSubjectStructureSchema} from "../../SubjectStructure.js";
 
-export const ListSubjectStructure = UnknownSubjectStructure.extend({
+export const ListSubjectStructure = UnknownSubjectStructureSchema.extend({
   min: z.number().optional(),
   max: z.number().optional(),
   // Constraints that apply to items at any position

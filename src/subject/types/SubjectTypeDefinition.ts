@@ -1,7 +1,7 @@
 import {z} from "zod";
 import {Subject, UnknownSubject} from "../Subject.js";
 import {ZodType} from "zod";
-import {UnknownSubjectStructure} from "../SubjectStructure.js";
+import {UnknownSubjectStructure, UnknownSubjectStructureSchema} from "../SubjectStructure.js";
 
 export interface SubjectVoterProps<S> {
   subject: S,

@@ -1,7 +1,5 @@
-import {Subject, UnknownSubject} from "../Subject.js";
-import {ZodType} from "zod";
-import {getSubject, getSubjects} from "../../store.js";
-import {getSubjectType} from "../types/index.js";
+import {UnknownSubject} from "../Subject.js";
+import {getSubjects} from "../../store.js";
 import {getUpdatedSubject} from "./getUpdatedSubject.js";
 
 export const getUpdatedSubjects = async (

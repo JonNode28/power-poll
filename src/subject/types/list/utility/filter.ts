@@ -1,8 +1,9 @@
 import {getSubject, getSubjects} from "../../../../store.js";
 import {UnknownSubject} from "../../../Subject.js";
 import {validateSubjectStructure} from "../../../validateSubjectStructure.js";
-import {UnknownSubjectStructure} from "../../../SubjectStructure.js";
+import {UnknownSubjectStructure, UnknownSubjectStructureSchema} from "../../../SubjectStructure.js";
 import {ListSubjectStructure} from "../ListSubjectStructure.js";
+import {getStructure} from "../../structure/utility/getStructure.js";
 
 export const filterValidSubjectIds = async (itemSubjectIds: string[], itemStructureSubjects?: UnknownSubjectStructure[]) => {
   const subjects = await getSubjects(itemSubjectIds)
@@ -34,10 +35,11 @@ export const filterValidSubjects = async (itemSubjects: UnknownSubject[], itemSt
 }
 
 export const filterValidSubjectsByStructureId = async (itemSubjects: UnknownSubject[], listSubjectStructureId?: string) => {
-  const listStructureSubject = listSubjectStructureId
-    ? await getSubject(listSubjectStructureId, ListSubjectStructure)
+  const listStructure = listSubjectStructureId
+    ? await getStructure(listSubjectStructureId, ListSubjectStructure)
     : undefined
-  if(!listStructureSubject?.items) return filterValidSubjects(itemSubjects)
-  return filterValidSubjects(itemSubjects, await getSubjects(listStructureSubject.items))
+  if(!listStructure?.items?.length) return filterValidSubjects(itemSubjects)
+  const itemStructures = await Promise.all(listStructure.items.map(itemStructureSubjectId => getStructure(itemStructureSubjectId, UnknownSubjectStructureSchema)))
+  return filterValidSubjects(itemSubjects, itemStructures)
 }
 

@@ -1,6 +1,6 @@
 import {createSubjectSchema} from "../../Subject.js";
 import z from "zod";
-import {UnknownSubjectStructure} from "../../SubjectStructure.js";
+import {UnknownSubjectStructureSchema} from "../../SubjectStructure.js";
 
 export const StructureSubjectValue = z.literal(true)
 export type StructureSubjectValue = z.infer<typeof StructureSubjectValue>
@@ -11,7 +11,7 @@ export type StructureSubjectValueReason = z.infer<typeof StructureSubjectValueRe
 
 export const StructureSubject = createSubjectSchema(StructureSubjectValue, StructureSubjectValueReason, 'structure').extend({
   engagementInput: z.string().optional(),
-  structure: UnknownSubjectStructure
+  structure: UnknownSubjectStructureSchema
 })
 
 export type StructureSubject = z.infer<typeof StructureSubject>

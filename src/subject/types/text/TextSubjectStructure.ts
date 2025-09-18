@@ -1,7 +1,7 @@
-import {UnknownSubjectStructure} from "../../SubjectStructure.js";
+import {UnknownSubjectStructureSchema} from "../../SubjectStructure.js";
 import z from "zod";
 
-export const TextSubjectStructure = UnknownSubjectStructure.extend({
+export const TextSubjectStructure = UnknownSubjectStructureSchema.extend({
   min: z.number().optional(),
   max: z.number().optional(),
 })
